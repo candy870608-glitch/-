@@ -11,534 +11,1358 @@
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon.png">
 <style>
-  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-  body{margin:0;padding:0;background:#fff;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif}
-  #root{padding-bottom:env(safe-area-inset-bottom)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;padding:0;background:#fff;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif}
+#root{padding-bottom:env(safe-area-inset-bottom)}
 </style>
 </head>
 <body>
 <div id="root"></div>
-
 <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script src="https://unpkg.com/recharts@2.12.7/umd/Recharts.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script>
 
-<script type="text/babel" data-presets="react">
-const { useState, useEffect, useRef } = React;
-const { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } = Recharts;
+var _react = React;
+var useState = React.useState;
+var useEffect = React.useEffect;
+var useRef = React.useRef;
+var _recharts = Recharts;
+var LineChart = Recharts.LineChart;
+var Line = Recharts.Line;
+var XAxis = Recharts.XAxis;
+var YAxis = Recharts.YAxis;
+var CartesianGrid = Recharts.CartesianGrid;
+var Tooltip = Recharts.Tooltip;
+var ResponsiveContainer = Recharts.ResponsiveContainer;
 
-
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 // ── helpers ──────────────────────────────────────────────
-const CIRC = 2 * Math.PI * 88;
-const fmtTimer = s => { const m = Math.floor(s/60), x = s%60; return m+":"+(x<10?"0":"")+x; };
-
+var CIRC = 2 * Math.PI * 88;
+var fmtTimer = function fmtTimer(s) {
+  var m = Math.floor(s / 60),
+    x = s % 60;
+  return m + ":" + (x < 10 ? "0" : "") + x;
+};
 function getTodayStr() {
-  const d = new Date();
-  return `${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()}`;
+  var d = new Date();
+  return "".concat(d.getFullYear(), "/").concat(d.getMonth() + 1, "/").concat(d.getDate());
 }
 function dateToStr(d) {
-  return `${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()}`;
+  return "".concat(d.getFullYear(), "/").concat(d.getMonth() + 1, "/").concat(d.getDate());
 }
 function toTimeStr() {
-  return new Date().toLocaleTimeString("zh-TW",{hour:"2-digit",minute:"2-digit"});
-}
-
-function beep(){try{const a=new AudioContext(),o=a.createOscillator(),g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.value=880;g.gain.setValueAtTime(0.3,a.currentTime);g.gain.exponentialRampToValueAtTime(0.001,a.currentTime+0.5);o.start();o.stop(a.currentTime+0.5);}catch(e){}}
-
-function useLS(key, init) {
-  const [v, set] = useState(() => {
-    try { const s = localStorage.getItem(key); return s ? JSON.parse(s) : init; } catch { return init; }
+  return new Date().toLocaleTimeString("zh-TW", {
+    hour: "2-digit",
+    minute: "2-digit"
   });
-  const save = val => { set(val); try { localStorage.setItem(key, JSON.stringify(val)); } catch {} };
+}
+function beep() {
+  try {
+    var a = new AudioContext(),
+      o = a.createOscillator(),
+      g = a.createGain();
+    o.connect(g);
+    g.connect(a.destination);
+    o.frequency.value = 880;
+    g.gain.setValueAtTime(0.3, a.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, a.currentTime + 0.5);
+    o.start();
+    o.stop(a.currentTime + 0.5);
+  } catch (e) {}
+}
+function useLS(key, init) {
+  var _useState = useState(function () {
+      try {
+        var s = localStorage.getItem(key);
+        return s ? JSON.parse(s) : init;
+      } catch (_unused) {
+        return init;
+      }
+    }),
+    _useState2 = _slicedToArray(_useState, 2),
+    v = _useState2[0],
+    set = _useState2[1];
+  var save = function save(val) {
+    set(val);
+    try {
+      localStorage.setItem(key, JSON.stringify(val));
+    } catch (_unused2) {}
+  };
   return [v, save];
 }
-
-const CALORIE_GOAL = 1400, PROTEIN_GOAL = 120;
-const MEAL_LABELS = ["早餐","午餐","晚餐","點心"];
-const MEAL_ICONS  = ["🌅","☀️","🌇","🍎"];
-
-const C = {
-  bg:"#ffffff", bgSoft:"#f7f7f5", border:"#e8e8e8", borderMid:"#b0b0b0",
-  text:"#111", muted:"#777", hint:"#bbb",
-  green:"#1D9E75", greenBg:"#EAF3DE", greenText:"#3B6D11",
-  amber:"#BA7517", red:"#E24B4A", blue:"#185FA5",
+var CALORIE_GOAL = 1400,
+  PROTEIN_GOAL = 120;
+var MEAL_LABELS = ["早餐", "午餐", "晚餐", "點心"];
+var MEAL_ICONS = ["🌅", "☀️", "🌇", "🍎"];
+var C = {
+  bg: "#ffffff",
+  bgSoft: "#f7f7f5",
+  border: "#e8e8e8",
+  borderMid: "#b0b0b0",
+  text: "#111",
+  muted: "#777",
+  hint: "#bbb",
+  green: "#1D9E75",
+  greenBg: "#EAF3DE",
+  greenText: "#3B6D11",
+  amber: "#BA7517",
+  red: "#E24B4A",
+  blue: "#185FA5"
 };
-
-const InpBase = {
-  padding:"10px 8px", border:`1px solid #ddd`, borderRadius:8,
-  fontSize:14, background:"#fff", color:"#111", outline:"none",
-  boxSizing:"border-box", WebkitAppearance:"none", appearance:"none",
+var InpBase = {
+  padding: "10px 8px",
+  border: "1px solid #ddd",
+  borderRadius: 8,
+  fontSize: 14,
+  background: "#fff",
+  color: "#111",
+  outline: "none",
+  boxSizing: "border-box",
+  WebkitAppearance: "none",
+  appearance: "none"
 };
 
 // ── Calendar strip ────────────────────────────────────────
-function CalStrip({ selected, onSelect }) {
-  const today = new Date();
-  const days = Array.from({length:14}, (_,i) => {
-    const d = new Date(today); d.setDate(today.getDate() - 13 + i); return d;
+function CalStrip(_ref) {
+  var selected = _ref.selected,
+    onSelect = _ref.onSelect;
+  var today = new Date();
+  var days = Array.from({
+    length: 14
+  }, function (_, i) {
+    var d = new Date(today);
+    d.setDate(today.getDate() - 13 + i);
+    return d;
   });
-  const ref = useRef(null);
-  useEffect(() => { if(ref.current) ref.current.scrollLeft = ref.current.scrollWidth; }, []);
-  const wday = ["日","一","二","三","四","五","六"];
-  return (
-    <div ref={ref} style={{display:"flex",gap:6,overflowX:"auto",padding:"0.75rem 1rem",
-      borderBottom:`1px solid ${C.border}`,scrollbarWidth:"none",WebkitOverflowScrolling:"touch"}}>
-      {days.map(d => {
-        const ds = dateToStr(d);
-        const isToday = ds === getTodayStr();
-        const isSel = ds === selected;
-        return (
-          <button key={ds} onClick={() => onSelect(ds)}
-            style={{flexShrink:0,width:44,display:"flex",flexDirection:"column",alignItems:"center",
-              padding:"6px 0",borderRadius:10,border:"none",cursor:"pointer",
-              background: isSel ? C.blue : "transparent",
-              color: isSel ? "#fff" : isToday ? C.blue : C.muted}}>
-            <span style={{fontSize:10,marginBottom:2}}>{wday[d.getDay()]}</span>
-            <span style={{fontSize:15,fontWeight:isSel||isToday?600:400}}>{d.getDate()}</span>
-          </button>
-        );
-      })}
-    </div>
-  );
+  var ref = useRef(null);
+  useEffect(function () {
+    if (ref.current) ref.current.scrollLeft = ref.current.scrollWidth;
+  }, []);
+  var wday = ["日", "一", "二", "三", "四", "五", "六"];
+  return /*#__PURE__*/React.createElement("div", {
+    ref: ref,
+    style: {
+      display: "flex",
+      gap: 6,
+      overflowX: "auto",
+      padding: "0.75rem 1rem",
+      borderBottom: "1px solid ".concat(C.border),
+      scrollbarWidth: "none",
+      WebkitOverflowScrolling: "touch"
+    }
+  }, days.map(function (d) {
+    var ds = dateToStr(d);
+    var isToday = ds === getTodayStr();
+    var isSel = ds === selected;
+    return /*#__PURE__*/React.createElement("button", {
+      key: ds,
+      onClick: function onClick() {
+        return onSelect(ds);
+      },
+      style: {
+        flexShrink: 0,
+        width: 44,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        padding: "6px 0",
+        borderRadius: 10,
+        border: "none",
+        cursor: "pointer",
+        background: isSel ? C.blue : "transparent",
+        color: isSel ? "#fff" : isToday ? C.blue : C.muted
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 10,
+        marginBottom: 2
+      }
+    }, wday[d.getDay()]), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 15,
+        fontWeight: isSel || isToday ? 600 : 400
+      }
+    }, d.getDate()));
+  }));
 }
 
 // ── TIMER ─────────────────────────────────────────────────
 function TimerTab() {
-  const [total, setTotal] = useState(60);
-  const [rem, setRem] = useState(60);
-  const [running, setRunning] = useState(false);
-  const [done, setDone] = useState(false);
-  const [paused, setPaused] = useState(false);
-  const iRef = useRef(null);
-  const frac = rem / total;
-  const offset = CIRC * (1 - frac);
-  const ring = frac > 0.5 ? C.green : frac > 0.25 ? C.amber : C.red;
-
-  function pick(s) { if(running) return; setTotal(s); setRem(s); setDone(false); setPaused(false); }
-  function toggle() {
-    if(done) { setDone(false); setRem(total); return; }
-    if(!running) { setRunning(true); setPaused(false); } else { setRunning(false); setPaused(true); }
+  var _useState3 = useState(60),
+    _useState4 = _slicedToArray(_useState3, 2),
+    total = _useState4[0],
+    setTotal = _useState4[1];
+  var _useState5 = useState(60),
+    _useState6 = _slicedToArray(_useState5, 2),
+    rem = _useState6[0],
+    setRem = _useState6[1];
+  var _useState7 = useState(false),
+    _useState8 = _slicedToArray(_useState7, 2),
+    running = _useState8[0],
+    setRunning = _useState8[1];
+  var _useState9 = useState(false),
+    _useState0 = _slicedToArray(_useState9, 2),
+    done = _useState0[0],
+    setDone = _useState0[1];
+  var _useState1 = useState(false),
+    _useState10 = _slicedToArray(_useState1, 2),
+    paused = _useState10[0],
+    setPaused = _useState10[1];
+  var iRef = useRef(null);
+  var frac = rem / total;
+  var offset = CIRC * (1 - frac);
+  var ring = frac > 0.5 ? C.green : frac > 0.25 ? C.amber : C.red;
+  function pick(s) {
+    if (running) return;
+    setTotal(s);
+    setRem(s);
+    setDone(false);
+    setPaused(false);
   }
-  function reset() { clearInterval(iRef.current); setRunning(false); setPaused(false); setDone(false); setRem(total); }
-
-  useEffect(() => {
-    if(running) {
-      iRef.current = setInterval(() => {
-        setRem(r => { if(r<=1) { clearInterval(iRef.current); setRunning(false); setDone(true); beep(); return total; } return r-1; });
+  function toggle() {
+    if (done) {
+      setDone(false);
+      setRem(total);
+      return;
+    }
+    if (!running) {
+      setRunning(true);
+      setPaused(false);
+    } else {
+      setRunning(false);
+      setPaused(true);
+    }
+  }
+  function reset() {
+    clearInterval(iRef.current);
+    setRunning(false);
+    setPaused(false);
+    setDone(false);
+    setRem(total);
+  }
+  useEffect(function () {
+    if (running) {
+      iRef.current = setInterval(function () {
+        setRem(function (r) {
+          if (r <= 1) {
+            clearInterval(iRef.current);
+            setRunning(false);
+            setDone(true);
+            beep();
+            return total;
+          }
+          return r - 1;
+        });
       }, 1000);
     } else clearInterval(iRef.current);
-    return () => clearInterval(iRef.current);
+    return function () {
+      return clearInterval(iRef.current);
+    };
   }, [running, total]);
-
-  return (
-    <div style={{display:"flex",flexDirection:"column",alignItems:"center",padding:"1.5rem 1rem"}}>
-      {done && <div style={{background:C.greenBg,border:`1px solid ${C.green}`,borderRadius:10,
-        padding:"10px 18px",fontSize:14,color:C.greenText,marginBottom:16,width:"100%",textAlign:"center"}}>
-        休息時間到！繼續下一組 💪</div>}
-      <div style={{position:"relative",width:200,height:200,marginBottom:20}}>
-        <svg width="200" height="200" viewBox="0 0 200 200" style={{transform:"rotate(-90deg)"}}>
-          <circle cx="100" cy="100" r="88" fill="none" stroke="#eee" strokeWidth="8"/>
-          <circle cx="100" cy="100" r="88" fill="none" stroke={ring} strokeWidth="8"
-            strokeDasharray={CIRC} strokeDashoffset={offset} strokeLinecap="round"
-            style={{transition:"stroke-dashoffset 0.9s linear,stroke 0.3s"}}/>
-        </svg>
-        <div style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",textAlign:"center"}}>
-          <div style={{fontSize:44,fontWeight:500,letterSpacing:-1}}>{fmtTimer(rem)}</div>
-          <div style={{fontSize:12,color:C.muted,marginTop:4}}>
-            {done?"完成！":running?"休息中...":paused?"已暫停":"準備好了嗎"}
-          </div>
-        </div>
-      </div>
-      <div style={{display:"flex",gap:8,marginBottom:16,width:"100%",maxWidth:280}}>
-        {[60,90,120,150].map(s => (
-          <button key={s} onClick={() => pick(s)} style={{flex:1,padding:"10px 0",
-            border:`1px solid ${total===s?"#999":"#ddd"}`,borderRadius:8,
-            background:total===s?"#f0f0f0":"transparent",fontSize:12,cursor:"pointer",
-            fontWeight:total===s?600:400,color:total===s?"#111":"#777"}}>{s}秒</button>
-        ))}
-      </div>
-      <div style={{display:"flex",gap:8,width:"100%",maxWidth:280}}>
-        <button onClick={toggle} style={{flex:2,padding:13,border:"1px solid #999",borderRadius:8,
-          background:"transparent",fontSize:15,fontWeight:600,cursor:"pointer",color:"#111"}}>
-          {done?"再一組":running?"暫停":paused?"繼續":"開始"}
-        </button>
-        <button onClick={reset} style={{flex:1,padding:13,border:"1px solid #ddd",borderRadius:8,
-          background:"transparent",fontSize:14,cursor:"pointer",color:"#777"}}>重設</button>
-      </div>
-    </div>
-  );
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      padding: "1.5rem 1rem"
+    }
+  }, done && /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: C.greenBg,
+      border: "1px solid ".concat(C.green),
+      borderRadius: 10,
+      padding: "10px 18px",
+      fontSize: 14,
+      color: C.greenText,
+      marginBottom: 16,
+      width: "100%",
+      textAlign: "center"
+    }
+  }, "\u4F11\u606F\u6642\u9593\u5230\uFF01\u7E7C\u7E8C\u4E0B\u4E00\u7D44 \uD83D\uDCAA"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "relative",
+      width: 200,
+      height: 200,
+      marginBottom: 20
+    }
+  }, /*#__PURE__*/React.createElement("svg", {
+    width: "200",
+    height: "200",
+    viewBox: "0 0 200 200",
+    style: {
+      transform: "rotate(-90deg)"
+    }
+  }, /*#__PURE__*/React.createElement("circle", {
+    cx: "100",
+    cy: "100",
+    r: "88",
+    fill: "none",
+    stroke: "#eee",
+    strokeWidth: "8"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "100",
+    cy: "100",
+    r: "88",
+    fill: "none",
+    stroke: ring,
+    strokeWidth: "8",
+    strokeDasharray: CIRC,
+    strokeDashoffset: offset,
+    strokeLinecap: "round",
+    style: {
+      transition: "stroke-dashoffset 0.9s linear,stroke 0.3s"
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%,-50%)",
+      textAlign: "center"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 44,
+      fontWeight: 500,
+      letterSpacing: -1
+    }
+  }, fmtTimer(rem)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: C.muted,
+      marginTop: 4
+    }
+  }, done ? "完成！" : running ? "休息中..." : paused ? "已暫停" : "準備好了嗎"))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 8,
+      marginBottom: 16,
+      width: "100%",
+      maxWidth: 280
+    }
+  }, [60, 90, 120, 150].map(function (s) {
+    return /*#__PURE__*/React.createElement("button", {
+      key: s,
+      onClick: function onClick() {
+        return pick(s);
+      },
+      style: {
+        flex: 1,
+        padding: "10px 0",
+        border: "1px solid ".concat(total === s ? "#999" : "#ddd"),
+        borderRadius: 8,
+        background: total === s ? "#f0f0f0" : "transparent",
+        fontSize: 12,
+        cursor: "pointer",
+        fontWeight: total === s ? 600 : 400,
+        color: total === s ? "#111" : "#777"
+      }
+    }, s, "\u79D2");
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 8,
+      width: "100%",
+      maxWidth: 280
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: toggle,
+    style: {
+      flex: 2,
+      padding: 13,
+      border: "1px solid #999",
+      borderRadius: 8,
+      background: "transparent",
+      fontSize: 15,
+      fontWeight: 600,
+      cursor: "pointer",
+      color: "#111"
+    }
+  }, done ? "再一組" : running ? "暫停" : paused ? "繼續" : "開始"), /*#__PURE__*/React.createElement("button", {
+    onClick: reset,
+    style: {
+      flex: 1,
+      padding: 13,
+      border: "1px solid #ddd",
+      borderRadius: 8,
+      background: "transparent",
+      fontSize: 14,
+      cursor: "pointer",
+      color: "#777"
+    }
+  }, "\u91CD\u8A2D")));
 }
 
 // ── WORKOUT ───────────────────────────────────────────────
 function WorkoutTab() {
-  const [entries, setEntries] = useLS("wt_v3", []);
-  const [selDate, setSelDate] = useState(getTodayStr());
-  const [name, setName] = useState("");
-  const [weight, setWeight] = useState("");
-  const [reps, setReps] = useState("");
-  const [expanded, setExpanded] = useState({});
-  const [err, setErr] = useState("");
-
+  var _useLS = useLS("wt_v3", []),
+    _useLS2 = _slicedToArray(_useLS, 2),
+    entries = _useLS2[0],
+    setEntries = _useLS2[1];
+  var _useState11 = useState(getTodayStr()),
+    _useState12 = _slicedToArray(_useState11, 2),
+    selDate = _useState12[0],
+    setSelDate = _useState12[1];
+  var _useState13 = useState(""),
+    _useState14 = _slicedToArray(_useState13, 2),
+    name = _useState14[0],
+    setName = _useState14[1];
+  var _useState15 = useState(""),
+    _useState16 = _slicedToArray(_useState15, 2),
+    weight = _useState16[0],
+    setWeight = _useState16[1];
+  var _useState17 = useState(""),
+    _useState18 = _slicedToArray(_useState17, 2),
+    reps = _useState18[0],
+    setReps = _useState18[1];
+  var _useState19 = useState({}),
+    _useState20 = _slicedToArray(_useState19, 2),
+    expanded = _useState20[0],
+    setExpanded = _useState20[1];
+  var _useState21 = useState(""),
+    _useState22 = _slicedToArray(_useState21, 2),
+    err = _useState22[0],
+    setErr = _useState22[1];
   function add() {
-    const w = parseFloat(weight);
-    const r = parseInt(reps);
-    if(!name.trim()) { setErr("請填入動作名稱"); return; }
-    if(isNaN(w) || w <= 0) { setErr("請填入正確重量"); return; }
-    if(isNaN(r) || r <= 0) { setErr("請填入次數"); return; }
+    var w = parseFloat(weight);
+    var r = parseInt(reps);
+    if (!name.trim()) {
+      setErr("請填入動作名稱");
+      return;
+    }
+    if (isNaN(w) || w <= 0) {
+      setErr("請填入正確重量");
+      return;
+    }
+    if (isNaN(r) || r <= 0) {
+      setErr("請填入次數");
+      return;
+    }
     setErr("");
-    const newEntry = { id: String(Date.now()), name: name.trim(), weight: w, reps: r, date: selDate, time: toTimeStr() };
-    setEntries([...entries, newEntry]);
+    var newEntry = {
+      id: String(Date.now()),
+      name: name.trim(),
+      weight: w,
+      reps: r,
+      date: selDate,
+      time: toTimeStr()
+    };
+    setEntries([].concat(_toConsumableArray(entries), [newEntry]));
     // keep name & weight; only clear reps
     setReps("");
-    setExpanded(x => ({...x, [name.trim()]: true}));
+    setExpanded(function (x) {
+      return _objectSpread(_objectSpread({}, x), {}, _defineProperty({}, name.trim(), true));
+    });
   }
-
-  const dayList = entries.filter(e => e.date === selDate);
-  const groups = {};
-  dayList.forEach(e => { if(!groups[e.name]) groups[e.name] = []; groups[e.name].push(e); });
-
-  function del(id) { setEntries(entries.filter(e => e.id !== id)); }
-
-  return (
-    <div>
-      <CalStrip selected={selDate} onSelect={d => { setSelDate(d); setErr(""); }} />
-      <div style={{padding:"0.75rem 1rem 1.5rem"}}>
-
-        <div style={{background:"#f5f5f5",borderRadius:12,padding:"1rem",marginBottom:16,border:"1px solid #e0e0e0"}}>
-          <input value={name} onChange={e => setName(e.target.value)}
-            placeholder="動作名稱（深蹲、臥推...）"
-            style={{...InpBase, width:"100%", marginBottom:8, fontSize:15}}/>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:8}}>
-            <input value={weight} onChange={e => setWeight(e.target.value)}
-              placeholder="重量(kg)" inputMode="decimal" style={InpBase}/>
-            <input value={reps} onChange={e => setReps(e.target.value)}
-              placeholder="次數" inputMode="numeric" style={InpBase}/>
-          </div>
-          {err && <div style={{fontSize:12,color:C.red,marginBottom:6}}>{err}</div>}
-          <button
-            onClick={add}
-            style={{width:"100%",padding:12,border:"1px solid #999",borderRadius:8,
-              background:"#fff",fontSize:15,fontWeight:600,cursor:"pointer",color:"#111",
-              WebkitTapHighlightColor:"transparent"}}>
-            + 加入紀錄
-          </button>
-        </div>
-
-        {Object.keys(groups).length === 0
-          ? <div style={{textAlign:"center",padding:"2rem",color:C.hint,fontSize:14}}>這天還沒有訓練紀錄</div>
-          : Object.entries(groups).map(([gname, glist]) => {
-            const isOpen = expanded[gname];
-            const totalVol = glist.reduce((s,e) => s + e.weight*e.reps, 0);
-            return (
-              <div key={gname} style={{background:"#fff",border:"1px solid #e0e0e0",borderRadius:10,marginBottom:10,overflow:"hidden"}}>
-                <button onClick={() => setExpanded(x => ({...x,[gname]:!x[gname]}))}
-                  style={{width:"100%",padding:"12px 14px",display:"flex",justifyContent:"space-between",
-                    alignItems:"center",background:"transparent",border:"none",cursor:"pointer",textAlign:"left",
-                    WebkitTapHighlightColor:"transparent"}}>
-                  <div>
-                    <div style={{fontSize:15,fontWeight:600,color:"#111"}}>{gname}</div>
-                    <div style={{fontSize:12,color:C.muted,marginTop:2}}>
-                      {glist.length} 組・總量 {Math.round(totalVol)} kg
-                    </div>
-                  </div>
-                  <span style={{color:C.hint,fontSize:16,display:"inline-block",
-                    transform:isOpen?"rotate(180deg)":"rotate(0deg)",transition:"transform 0.2s"}}>▼</span>
-                </button>
-                {isOpen && (
-                  <div style={{borderTop:"1px solid #e0e0e0"}}>
-                    {glist.map((e,i) => (
-                      <div key={e.id} style={{display:"flex",justifyContent:"space-between",alignItems:"center",
-                        padding:"10px 14px",borderBottom:i<glist.length-1?"1px solid #eee":"none",
-                        background:i%2===0?"#fafafa":"#fff"}}>
-                        <div style={{fontSize:13}}>
-                          <span style={{fontWeight:600}}>第{i+1}組</span>
-                          <span style={{color:C.muted,marginLeft:8}}>{e.weight}kg × {e.reps}次</span>
-                        </div>
-                        <div style={{display:"flex",alignItems:"center",gap:8}}>
-                          <span style={{fontSize:11,color:C.hint}}>{e.time}</span>
-                          <button onClick={() => del(e.id)} style={{background:"none",border:"none",
-                            cursor:"pointer",fontSize:18,color:"#ccc",padding:"2px 6px",lineHeight:1}}>×</button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            );
-          })
+  var dayList = entries.filter(function (e) {
+    return e.date === selDate;
+  });
+  var groups = {};
+  dayList.forEach(function (e) {
+    if (!groups[e.name]) groups[e.name] = [];
+    groups[e.name].push(e);
+  });
+  function del(id) {
+    setEntries(entries.filter(function (e) {
+      return e.id !== id;
+    }));
+  }
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(CalStrip, {
+    selected: selDate,
+    onSelect: function onSelect(d) {
+      setSelDate(d);
+      setErr("");
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "0.75rem 1rem 1.5rem"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "#f5f5f5",
+      borderRadius: 12,
+      padding: "1rem",
+      marginBottom: 16,
+      border: "1px solid #e0e0e0"
+    }
+  }, /*#__PURE__*/React.createElement("input", {
+    value: name,
+    onChange: function onChange(e) {
+      return setName(e.target.value);
+    },
+    placeholder: "\u52D5\u4F5C\u540D\u7A31\uFF08\u6DF1\u8E72\u3001\u81E5\u63A8...\uFF09",
+    style: _objectSpread(_objectSpread({}, InpBase), {}, {
+      width: "100%",
+      marginBottom: 8,
+      fontSize: 15
+    })
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr",
+      gap: 8,
+      marginBottom: 8
+    }
+  }, /*#__PURE__*/React.createElement("input", {
+    value: weight,
+    onChange: function onChange(e) {
+      return setWeight(e.target.value);
+    },
+    placeholder: "\u91CD\u91CF(kg)",
+    inputMode: "decimal",
+    style: InpBase
+  }), /*#__PURE__*/React.createElement("input", {
+    value: reps,
+    onChange: function onChange(e) {
+      return setReps(e.target.value);
+    },
+    placeholder: "\u6B21\u6578",
+    inputMode: "numeric",
+    style: InpBase
+  })), err && /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: C.red,
+      marginBottom: 6
+    }
+  }, err), /*#__PURE__*/React.createElement("button", {
+    onClick: add,
+    style: {
+      width: "100%",
+      padding: 12,
+      border: "1px solid #999",
+      borderRadius: 8,
+      background: "#fff",
+      fontSize: 15,
+      fontWeight: 600,
+      cursor: "pointer",
+      color: "#111",
+      WebkitTapHighlightColor: "transparent"
+    }
+  }, "+ \u52A0\u5165\u7D00\u9304")), Object.keys(groups).length === 0 ? /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: "center",
+      padding: "2rem",
+      color: C.hint,
+      fontSize: 14
+    }
+  }, "\u9019\u5929\u9084\u6C92\u6709\u8A13\u7DF4\u7D00\u9304") : Object.entries(groups).map(function (_ref2) {
+    var _ref3 = _slicedToArray(_ref2, 2),
+      gname = _ref3[0],
+      glist = _ref3[1];
+    var isOpen = expanded[gname];
+    var totalVol = glist.reduce(function (s, e) {
+      return s + e.weight * e.reps;
+    }, 0);
+    return /*#__PURE__*/React.createElement("div", {
+      key: gname,
+      style: {
+        background: "#fff",
+        border: "1px solid #e0e0e0",
+        borderRadius: 10,
+        marginBottom: 10,
+        overflow: "hidden"
+      }
+    }, /*#__PURE__*/React.createElement("button", {
+      onClick: function onClick() {
+        return setExpanded(function (x) {
+          return _objectSpread(_objectSpread({}, x), {}, _defineProperty({}, gname, !x[gname]));
+        });
+      },
+      style: {
+        width: "100%",
+        padding: "12px 14px",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        background: "transparent",
+        border: "none",
+        cursor: "pointer",
+        textAlign: "left",
+        WebkitTapHighlightColor: "transparent"
+      }
+    }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 15,
+        fontWeight: 600,
+        color: "#111"
+      }
+    }, gname), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 12,
+        color: C.muted,
+        marginTop: 2
+      }
+    }, glist.length, " \u7D44\u30FB\u7E3D\u91CF ", Math.round(totalVol), " kg")), /*#__PURE__*/React.createElement("span", {
+      style: {
+        color: C.hint,
+        fontSize: 16,
+        display: "inline-block",
+        transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
+        transition: "transform 0.2s"
+      }
+    }, "\u25BC")), isOpen && /*#__PURE__*/React.createElement("div", {
+      style: {
+        borderTop: "1px solid #e0e0e0"
+      }
+    }, glist.map(function (e, i) {
+      return /*#__PURE__*/React.createElement("div", {
+        key: e.id,
+        style: {
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: "10px 14px",
+          borderBottom: i < glist.length - 1 ? "1px solid #eee" : "none",
+          background: i % 2 === 0 ? "#fafafa" : "#fff"
         }
-      </div>
-    </div>
-  );
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontSize: 13
+        }
+      }, /*#__PURE__*/React.createElement("span", {
+        style: {
+          fontWeight: 600
+        }
+      }, "\u7B2C", i + 1, "\u7D44"), /*#__PURE__*/React.createElement("span", {
+        style: {
+          color: C.muted,
+          marginLeft: 8
+        }
+      }, e.weight, "kg \xD7 ", e.reps, "\u6B21")), /*#__PURE__*/React.createElement("div", {
+        style: {
+          display: "flex",
+          alignItems: "center",
+          gap: 8
+        }
+      }, /*#__PURE__*/React.createElement("span", {
+        style: {
+          fontSize: 11,
+          color: C.hint
+        }
+      }, e.time), /*#__PURE__*/React.createElement("button", {
+        onClick: function onClick() {
+          return del(e.id);
+        },
+        style: {
+          background: "none",
+          border: "none",
+          cursor: "pointer",
+          fontSize: 18,
+          color: "#ccc",
+          padding: "2px 6px",
+          lineHeight: 1
+        }
+      }, "\xD7")));
+    })));
+  })));
 }
 
 // ── FOOD ──────────────────────────────────────────────────
 function FoodTab() {
-  const [entries, setEntries] = useLS("food_v3", []);
-  const [selDate, setSelDate] = useState(getTodayStr());
-  const [selMeal, setSelMeal] = useState(0);
-  const [name, setName] = useState("");
-  const [cal, setCal] = useState("");
-  const [pro, setPro] = useState("");
-  const [expanded, setExpanded] = useState({0:true,1:true,2:true,3:true});
-
-  const isToday = selDate === getTodayStr();
-  const dayList = entries.filter(e => e.date === selDate);
-  const totalCal  = dayList.reduce((s,e) => s+e.cal, 0);
-  const totalPro  = dayList.reduce((s,e) => s+e.protein, 0);
+  var _useLS3 = useLS("food_v3", []),
+    _useLS4 = _slicedToArray(_useLS3, 2),
+    entries = _useLS4[0],
+    setEntries = _useLS4[1];
+  var _useState23 = useState(getTodayStr()),
+    _useState24 = _slicedToArray(_useState23, 2),
+    selDate = _useState24[0],
+    setSelDate = _useState24[1];
+  var _useState25 = useState(0),
+    _useState26 = _slicedToArray(_useState25, 2),
+    selMeal = _useState26[0],
+    setSelMeal = _useState26[1];
+  var _useState27 = useState(""),
+    _useState28 = _slicedToArray(_useState27, 2),
+    name = _useState28[0],
+    setName = _useState28[1];
+  var _useState29 = useState(""),
+    _useState30 = _slicedToArray(_useState29, 2),
+    cal = _useState30[0],
+    setCal = _useState30[1];
+  var _useState31 = useState(""),
+    _useState32 = _slicedToArray(_useState31, 2),
+    pro = _useState32[0],
+    setPro = _useState32[1];
+  var _useState33 = useState({
+      0: true,
+      1: true,
+      2: true,
+      3: true
+    }),
+    _useState34 = _slicedToArray(_useState33, 2),
+    expanded = _useState34[0],
+    setExpanded = _useState34[1];
+  var isToday = selDate === getTodayStr();
+  var dayList = entries.filter(function (e) {
+    return e.date === selDate;
+  });
+  var totalCal = dayList.reduce(function (s, e) {
+    return s + e.cal;
+  }, 0);
+  var totalPro = dayList.reduce(function (s, e) {
+    return s + e.protein;
+  }, 0);
   function add() {
-    if(!name.trim() || !cal) return;
-    setEntries([...entries, {
-      id: String(Date.now()), date: selDate, time: toTimeStr(), meal: selMeal,
-      name: name.trim(), cal: parseInt(cal)||0, protein: parseInt(pro)||0,
-    }]);
-    setName(""); setCal(""); setPro("");
+    if (!name.trim() || !cal) return;
+    setEntries([].concat(_toConsumableArray(entries), [{
+      id: String(Date.now()),
+      date: selDate,
+      time: toTimeStr(),
+      meal: selMeal,
+      name: name.trim(),
+      cal: parseInt(cal) || 0,
+      protein: parseInt(pro) || 0
+    }]));
+    setName("");
+    setCal("");
+    setPro("");
   }
-  function del(id) { setEntries(entries.filter(e => e.id !== id)); }
-
-  const SmInp = {
-    ...InpBase, fontSize:13, padding:"9px 6px", background:"#fff",
-  };
-
-  return (
-    <div>
-      <CalStrip selected={selDate} onSelect={setSelDate}/>
-      <div style={{padding:"0.75rem 1rem 1.5rem"}}>
-
-        {/* summary */}
-        <div style={{background:"#f5f5f5",borderRadius:12,padding:"12px 14px",marginBottom:12,border:"1px solid #e0e0e0"}}>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:8}}>
-            {[["卡路里",Math.round(totalCal),CALORIE_GOAL,"kcal",C.amber],
-              ["蛋白質",Math.round(totalPro),PROTEIN_GOAL,"g",C.blue]].map(([l,v,g,u,col]) => (
-              <div key={l}>
-                <div style={{display:"flex",justifyContent:"space-between",marginBottom:5}}>
-                  <span style={{fontSize:12,color:C.muted}}>{l}</span>
-                  <span style={{fontSize:12,color:C.muted}}>{v}/{g}{u}</span>
-                </div>
-                <div style={{background:"#ddd",borderRadius:4,height:5}}>
-                  <div style={{background:col,borderRadius:4,height:5,width:`${Math.min(v/g,1)*100}%`,transition:"width 0.4s"}}/>
-                </div>
-              </div>
-            ))}
-          </div>
-
-        </div>
-
-        {/* 拍照提示 */}
-        <div style={{background:"#fffbe6",border:"1px solid #f0d060",borderRadius:10,padding:"10px 14px",marginBottom:12,fontSize:13,color:"#7a5c00"}}>
-          📷 想用拍照辨識？直接把食物照片傳到對話框，我幫你估算熱量＋蛋白質，再填到這裡
-        </div>
-
-        {/* input — only today */}
-        {isToday && (
-          <div style={{background:"#f5f5f5",borderRadius:12,padding:"1rem",marginBottom:16,border:"1px solid #e0e0e0"}}>
-            <div style={{display:"flex",gap:6,marginBottom:10}}>
-              {MEAL_LABELS.map((l,i) => (
-                <button key={l} onClick={() => setSelMeal(i)} style={{flex:1,padding:"7px 0",
-                  border:`1px solid ${selMeal===i?"#999":"#ddd"}`,borderRadius:8,
-                  background:selMeal===i?"#fff":"transparent",fontSize:12,cursor:"pointer",
-                  fontWeight:selMeal===i?600:400,color:selMeal===i?"#111":"#777",
-                  WebkitTapHighlightColor:"transparent"}}>
-                  {MEAL_ICONS[i]} {l}
-                </button>
-              ))}
-            </div>
-            <input value={name} onChange={e => setName(e.target.value)} placeholder="食物名稱"
-              style={{...InpBase,width:"100%",marginBottom:8,fontSize:15}}/>
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6,marginBottom:8}}>
-              <input value={cal} onChange={e=>setCal(e.target.value)} placeholder="熱量 kcal" inputMode="numeric" style={SmInp}/>
-              <input value={pro} onChange={e=>setPro(e.target.value)} placeholder="蛋白質 g"  inputMode="numeric" style={SmInp}/>
-            </div>
-            <button onClick={add} style={{width:"100%",padding:12,border:"1px solid #999",borderRadius:8,
-              background:"#fff",fontSize:15,fontWeight:600,cursor:"pointer",color:"#111",
-              WebkitTapHighlightColor:"transparent"}}>
-              + 加入紀錄
-            </button>
-          </div>
-        )}
-
-        {/* meal groups */}
-        {MEAL_LABELS.map((label, mi) => {
-          const mList = dayList.filter(e => e.meal === mi);
-          const mCal  = mList.reduce((s,e) => s+e.cal, 0);
-          const mPro  = mList.reduce((s,e) => s+e.protein, 0);
-          const isOpen = expanded[mi];
-          return (
-            <div key={mi} style={{background:"#fff",border:"1px solid #e0e0e0",borderRadius:10,marginBottom:10,overflow:"hidden"}}>
-              <button onClick={() => setExpanded(x => ({...x,[mi]:!x[mi]}))}
-                style={{width:"100%",padding:"12px 14px",display:"flex",justifyContent:"space-between",
-                  alignItems:"center",background:"transparent",border:"none",cursor:"pointer",textAlign:"left",
-                  WebkitTapHighlightColor:"transparent"}}>
-                <div style={{display:"flex",alignItems:"center",gap:10}}>
-                  <span style={{fontSize:18}}>{MEAL_ICONS[mi]}</span>
-                  <div>
-                    <div style={{fontSize:14,fontWeight:600,color:"#111"}}>{label}</div>
-                    {mList.length > 0 &&
-                      <div style={{fontSize:12,color:C.muted,marginTop:1}}>{Math.round(mCal)} kcal・蛋白 {Math.round(mPro)}g</div>}
-                  </div>
-                </div>
-                <div style={{display:"flex",alignItems:"center",gap:8}}>
-                  <span style={{fontSize:13,fontWeight:600,color:mCal>0?"#111":C.hint}}>{mCal>0?Math.round(mCal)+"kcal":"–"}</span>
-                  <span style={{color:C.hint,fontSize:14,display:"inline-block",
-                    transform:isOpen?"rotate(180deg)":"rotate(0deg)",transition:"transform 0.2s"}}>▼</span>
-                </div>
-              </button>
-              {isOpen && (
-                <div style={{borderTop:"1px solid #eee"}}>
-                  {mList.length === 0
-                    ? <div style={{padding:"12px 14px",fontSize:13,color:C.hint,textAlign:"center"}}>尚無紀錄</div>
-                    : mList.map((e,i) => (
-                      <div key={e.id} style={{display:"flex",justifyContent:"space-between",alignItems:"center",
-                        padding:"10px 14px",borderBottom:i<mList.length-1?"1px solid #eee":"none",
-                        background:i%2===0?"#fafafa":"#fff"}}>
-                        <div>
-                          <div style={{fontSize:13,fontWeight:500}}>{e.name}</div>
-                          <div style={{fontSize:11,color:C.muted,marginTop:2}}>蛋白質 {e.protein}g</div>
-                        </div>
-                        <div style={{display:"flex",alignItems:"center",gap:8}}>
-                          <div style={{textAlign:"right"}}>
-                            <div style={{fontSize:13,fontWeight:600}}>{e.cal}kcal</div>
-                            <div style={{fontSize:11,color:C.hint}}>{e.time}</div>
-                          </div>
-                          <button onClick={() => del(e.id)} style={{background:"none",border:"none",
-                            cursor:"pointer",fontSize:18,color:"#ccc",padding:"2px 6px",lineHeight:1}}>×</button>
-                        </div>
-                      </div>
-                    ))
-                  }
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
+  function del(id) {
+    setEntries(entries.filter(function (e) {
+      return e.id !== id;
+    }));
+  }
+  var SmInp = _objectSpread(_objectSpread({}, InpBase), {}, {
+    fontSize: 13,
+    padding: "9px 6px",
+    background: "#fff"
+  });
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(CalStrip, {
+    selected: selDate,
+    onSelect: setSelDate
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "0.75rem 1rem 1.5rem"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "#f5f5f5",
+      borderRadius: 12,
+      padding: "12px 14px",
+      marginBottom: 12,
+      border: "1px solid #e0e0e0"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr",
+      gap: 10,
+      marginBottom: 8
+    }
+  }, [["卡路里", Math.round(totalCal), CALORIE_GOAL, "kcal", C.amber], ["蛋白質", Math.round(totalPro), PROTEIN_GOAL, "g", C.blue]].map(function (_ref4) {
+    var _ref5 = _slicedToArray(_ref4, 5),
+      l = _ref5[0],
+      v = _ref5[1],
+      g = _ref5[2],
+      u = _ref5[3],
+      col = _ref5[4];
+    return /*#__PURE__*/React.createElement("div", {
+      key: l
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        justifyContent: "space-between",
+        marginBottom: 5
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 12,
+        color: C.muted
+      }
+    }, l), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 12,
+        color: C.muted
+      }
+    }, v, "/", g, u)), /*#__PURE__*/React.createElement("div", {
+      style: {
+        background: "#ddd",
+        borderRadius: 4,
+        height: 5
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        background: col,
+        borderRadius: 4,
+        height: 5,
+        width: "".concat(Math.min(v / g, 1) * 100, "%"),
+        transition: "width 0.4s"
+      }
+    })));
+  }))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "#fffbe6",
+      border: "1px solid #f0d060",
+      borderRadius: 10,
+      padding: "10px 14px",
+      marginBottom: 12,
+      fontSize: 13,
+      color: "#7a5c00"
+    }
+  }, "\uD83D\uDCF7 \u60F3\u7528\u62CD\u7167\u8FA8\u8B58\uFF1F\u76F4\u63A5\u628A\u98DF\u7269\u7167\u7247\u50B3\u5230\u5C0D\u8A71\u6846\uFF0C\u6211\u5E6B\u4F60\u4F30\u7B97\u71B1\u91CF\uFF0B\u86CB\u767D\u8CEA\uFF0C\u518D\u586B\u5230\u9019\u88E1"), isToday && /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "#f5f5f5",
+      borderRadius: 12,
+      padding: "1rem",
+      marginBottom: 16,
+      border: "1px solid #e0e0e0"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 6,
+      marginBottom: 10
+    }
+  }, MEAL_LABELS.map(function (l, i) {
+    return /*#__PURE__*/React.createElement("button", {
+      key: l,
+      onClick: function onClick() {
+        return setSelMeal(i);
+      },
+      style: {
+        flex: 1,
+        padding: "7px 0",
+        border: "1px solid ".concat(selMeal === i ? "#999" : "#ddd"),
+        borderRadius: 8,
+        background: selMeal === i ? "#fff" : "transparent",
+        fontSize: 12,
+        cursor: "pointer",
+        fontWeight: selMeal === i ? 600 : 400,
+        color: selMeal === i ? "#111" : "#777",
+        WebkitTapHighlightColor: "transparent"
+      }
+    }, MEAL_ICONS[i], " ", l);
+  })), /*#__PURE__*/React.createElement("input", {
+    value: name,
+    onChange: function onChange(e) {
+      return setName(e.target.value);
+    },
+    placeholder: "\u98DF\u7269\u540D\u7A31",
+    style: _objectSpread(_objectSpread({}, InpBase), {}, {
+      width: "100%",
+      marginBottom: 8,
+      fontSize: 15
+    })
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr",
+      gap: 6,
+      marginBottom: 8
+    }
+  }, /*#__PURE__*/React.createElement("input", {
+    value: cal,
+    onChange: function onChange(e) {
+      return setCal(e.target.value);
+    },
+    placeholder: "\u71B1\u91CF kcal",
+    inputMode: "numeric",
+    style: SmInp
+  }), /*#__PURE__*/React.createElement("input", {
+    value: pro,
+    onChange: function onChange(e) {
+      return setPro(e.target.value);
+    },
+    placeholder: "\u86CB\u767D\u8CEA g",
+    inputMode: "numeric",
+    style: SmInp
+  })), /*#__PURE__*/React.createElement("button", {
+    onClick: add,
+    style: {
+      width: "100%",
+      padding: 12,
+      border: "1px solid #999",
+      borderRadius: 8,
+      background: "#fff",
+      fontSize: 15,
+      fontWeight: 600,
+      cursor: "pointer",
+      color: "#111",
+      WebkitTapHighlightColor: "transparent"
+    }
+  }, "+ \u52A0\u5165\u7D00\u9304")), MEAL_LABELS.map(function (label, mi) {
+    var mList = dayList.filter(function (e) {
+      return e.meal === mi;
+    });
+    var mCal = mList.reduce(function (s, e) {
+      return s + e.cal;
+    }, 0);
+    var mPro = mList.reduce(function (s, e) {
+      return s + e.protein;
+    }, 0);
+    var isOpen = expanded[mi];
+    return /*#__PURE__*/React.createElement("div", {
+      key: mi,
+      style: {
+        background: "#fff",
+        border: "1px solid #e0e0e0",
+        borderRadius: 10,
+        marginBottom: 10,
+        overflow: "hidden"
+      }
+    }, /*#__PURE__*/React.createElement("button", {
+      onClick: function onClick() {
+        return setExpanded(function (x) {
+          return _objectSpread(_objectSpread({}, x), {}, _defineProperty({}, mi, !x[mi]));
+        });
+      },
+      style: {
+        width: "100%",
+        padding: "12px 14px",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        background: "transparent",
+        border: "none",
+        cursor: "pointer",
+        textAlign: "left",
+        WebkitTapHighlightColor: "transparent"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        alignItems: "center",
+        gap: 10
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 18
+      }
+    }, MEAL_ICONS[mi]), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 14,
+        fontWeight: 600,
+        color: "#111"
+      }
+    }, label), mList.length > 0 && /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 12,
+        color: C.muted,
+        marginTop: 1
+      }
+    }, Math.round(mCal), " kcal\u30FB\u86CB\u767D ", Math.round(mPro), "g"))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        alignItems: "center",
+        gap: 8
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 13,
+        fontWeight: 600,
+        color: mCal > 0 ? "#111" : C.hint
+      }
+    }, mCal > 0 ? Math.round(mCal) + "kcal" : "–"), /*#__PURE__*/React.createElement("span", {
+      style: {
+        color: C.hint,
+        fontSize: 14,
+        display: "inline-block",
+        transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
+        transition: "transform 0.2s"
+      }
+    }, "\u25BC"))), isOpen && /*#__PURE__*/React.createElement("div", {
+      style: {
+        borderTop: "1px solid #eee"
+      }
+    }, mList.length === 0 ? /*#__PURE__*/React.createElement("div", {
+      style: {
+        padding: "12px 14px",
+        fontSize: 13,
+        color: C.hint,
+        textAlign: "center"
+      }
+    }, "\u5C1A\u7121\u7D00\u9304") : mList.map(function (e, i) {
+      return /*#__PURE__*/React.createElement("div", {
+        key: e.id,
+        style: {
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: "10px 14px",
+          borderBottom: i < mList.length - 1 ? "1px solid #eee" : "none",
+          background: i % 2 === 0 ? "#fafafa" : "#fff"
+        }
+      }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontSize: 13,
+          fontWeight: 500
+        }
+      }, e.name), /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontSize: 11,
+          color: C.muted,
+          marginTop: 2
+        }
+      }, "\u86CB\u767D\u8CEA ", e.protein, "g")), /*#__PURE__*/React.createElement("div", {
+        style: {
+          display: "flex",
+          alignItems: "center",
+          gap: 8
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          textAlign: "right"
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontSize: 13,
+          fontWeight: 600
+        }
+      }, e.cal, "kcal"), /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontSize: 11,
+          color: C.hint
+        }
+      }, e.time)), /*#__PURE__*/React.createElement("button", {
+        onClick: function onClick() {
+          return del(e.id);
+        },
+        style: {
+          background: "none",
+          border: "none",
+          cursor: "pointer",
+          fontSize: 18,
+          color: "#ccc",
+          padding: "2px 6px",
+          lineHeight: 1
+        }
+      }, "\xD7")));
+    })));
+  })));
 }
 
 // ── WEIGHT ────────────────────────────────────────────────
 function WeightTab() {
-  const [entries, setEntries] = useLS("weight_v3", []);
-  const [val, setVal] = useState("");
-  const today = getTodayStr();
-
+  var _useLS5 = useLS("weight_v3", []),
+    _useLS6 = _slicedToArray(_useLS5, 2),
+    entries = _useLS6[0],
+    setEntries = _useLS6[1];
+  var _useState35 = useState(""),
+    _useState36 = _slicedToArray(_useState35, 2),
+    val = _useState36[0],
+    setVal = _useState36[1];
+  var today = getTodayStr();
   function add() {
-    if(!val) return;
-    const w = parseFloat(val); if(isNaN(w)) return;
-    const existing = entries.findIndex(e => e.date === today);
-    const next = [...entries];
-    if(existing >= 0) next[existing] = {...next[existing], weight: w};
-    else next.push({id:String(Date.now()), date:today, weight:w});
-    next.sort((a,b) => a.date.localeCompare(b.date));
-    setEntries(next); setVal("");
+    if (!val) return;
+    var w = parseFloat(val);
+    if (isNaN(w)) return;
+    var existing = entries.findIndex(function (e) {
+      return e.date === today;
+    });
+    var next = _toConsumableArray(entries);
+    if (existing >= 0) next[existing] = _objectSpread(_objectSpread({}, next[existing]), {}, {
+      weight: w
+    });else next.push({
+      id: String(Date.now()),
+      date: today,
+      weight: w
+    });
+    next.sort(function (a, b) {
+      return a.date.localeCompare(b.date);
+    });
+    setEntries(next);
+    setVal("");
   }
-  function del(id) { setEntries(entries.filter(e => e.id !== id)); }
-
-  const latest = entries[entries.length-1];
-  const prev   = entries[entries.length-2];
-  const diff   = latest && prev ? (latest.weight - prev.weight).toFixed(1) : null;
-  const chartData = entries.slice(-30).map(e => ({date:e.date.slice(5), weight:e.weight}));
-
-  return (
-    <div style={{padding:"0.75rem 1rem 1.5rem"}}>
-      {latest && (
-        <div style={{background:"#f5f5f5",borderRadius:12,padding:"1rem",marginBottom:12,
-          display:"flex",justifyContent:"space-between",alignItems:"center",border:"1px solid #e0e0e0"}}>
-          <div>
-            <div style={{fontSize:12,color:C.muted,marginBottom:4}}>最新體重</div>
-            <div style={{fontSize:32,fontWeight:600}}>{latest.weight}<span style={{fontSize:14,color:C.muted,marginLeft:4}}>kg</span></div>
-            <div style={{fontSize:12,color:C.muted}}>{latest.date}</div>
-          </div>
-          {diff !== null && (
-            <div style={{textAlign:"right"}}>
-              <div style={{fontSize:12,color:C.muted,marginBottom:4}}>與前次</div>
-              <div style={{fontSize:22,fontWeight:600,color:parseFloat(diff)<0?C.green:parseFloat(diff)>0?C.red:C.muted}}>
-                {parseFloat(diff)>0?"+":""}{diff} kg
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-      <div style={{display:"flex",gap:8,marginBottom:16}}>
-        <input value={val} onChange={e=>setVal(e.target.value)} placeholder="今日體重 (kg)" inputMode="decimal"
-          style={{...InpBase,flex:1}}/>
-        <button onClick={add} style={{width:72,padding:10,border:"1px solid #999",borderRadius:8,
-          background:"#fff",fontSize:14,fontWeight:600,cursor:"pointer",color:"#111",
-          WebkitTapHighlightColor:"transparent"}}>記錄</button>
-      </div>
-
-      {chartData.length >= 2 && (
-        <div style={{background:"#f5f5f5",borderRadius:12,padding:"1rem",marginBottom:16,border:"1px solid #e0e0e0"}}>
-          <div style={{fontSize:12,color:C.muted,marginBottom:10,fontWeight:600}}>近期趨勢</div>
-          <ResponsiveContainer width="100%" height={180}>
-            <LineChart data={chartData} margin={{top:4,right:8,left:-20,bottom:0}}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#eee"/>
-              <XAxis dataKey="date" tick={{fontSize:10,fill:"#bbb"}} interval="preserveStartEnd"/>
-              <YAxis tick={{fontSize:10,fill:"#bbb"}} domain={["auto","auto"]}/>
-              <Tooltip contentStyle={{fontSize:12,borderRadius:8,border:"1px solid #eee"}}/>
-              <Line type="monotone" dataKey="weight" stroke={C.blue} strokeWidth={2}
-                dot={{r:3,fill:C.blue}} activeDot={{r:5}}/>
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      )}
-
-      <div style={{fontSize:12,color:C.muted,marginBottom:10,fontWeight:600}}>所有紀錄</div>
-      {entries.length === 0
-        ? <div style={{textAlign:"center",padding:"2rem",color:C.hint,fontSize:14}}>還沒有體重紀錄</div>
-        : [...entries].reverse().map(e => (
-          <div key={e.id} style={{background:"#fff",border:"1px solid #e8e8e8",borderRadius:8,
-            padding:"11px 14px",display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
-            <div style={{fontSize:14}}>{e.date}</div>
-            <div style={{display:"flex",alignItems:"center",gap:12}}>
-              <div style={{fontSize:15,fontWeight:600}}>{e.weight} kg</div>
-              <button onClick={()=>del(e.id)} style={{background:"none",border:"none",
-                cursor:"pointer",fontSize:18,color:"#ccc",padding:"2px 6px",lineHeight:1}}>×</button>
-            </div>
-          </div>
-        ))
+  function del(id) {
+    setEntries(entries.filter(function (e) {
+      return e.id !== id;
+    }));
+  }
+  var latest = entries[entries.length - 1];
+  var prev = entries[entries.length - 2];
+  var diff = latest && prev ? (latest.weight - prev.weight).toFixed(1) : null;
+  var chartData = entries.slice(-30).map(function (e) {
+    return {
+      date: e.date.slice(5),
+      weight: e.weight
+    };
+  });
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "0.75rem 1rem 1.5rem"
+    }
+  }, latest && /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "#f5f5f5",
+      borderRadius: 12,
+      padding: "1rem",
+      marginBottom: 12,
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      border: "1px solid #e0e0e0"
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: C.muted,
+      marginBottom: 4
+    }
+  }, "\u6700\u65B0\u9AD4\u91CD"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 32,
+      fontWeight: 600
+    }
+  }, latest.weight, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 14,
+      color: C.muted,
+      marginLeft: 4
+    }
+  }, "kg")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: C.muted
+    }
+  }, latest.date)), diff !== null && /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: "right"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: C.muted,
+      marginBottom: 4
+    }
+  }, "\u8207\u524D\u6B21"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 22,
+      fontWeight: 600,
+      color: parseFloat(diff) < 0 ? C.green : parseFloat(diff) > 0 ? C.red : C.muted
+    }
+  }, parseFloat(diff) > 0 ? "+" : "", diff, " kg"))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 8,
+      marginBottom: 16
+    }
+  }, /*#__PURE__*/React.createElement("input", {
+    value: val,
+    onChange: function onChange(e) {
+      return setVal(e.target.value);
+    },
+    placeholder: "\u4ECA\u65E5\u9AD4\u91CD (kg)",
+    inputMode: "decimal",
+    style: _objectSpread(_objectSpread({}, InpBase), {}, {
+      flex: 1
+    })
+  }), /*#__PURE__*/React.createElement("button", {
+    onClick: add,
+    style: {
+      width: 72,
+      padding: 10,
+      border: "1px solid #999",
+      borderRadius: 8,
+      background: "#fff",
+      fontSize: 14,
+      fontWeight: 600,
+      cursor: "pointer",
+      color: "#111",
+      WebkitTapHighlightColor: "transparent"
+    }
+  }, "\u8A18\u9304")), chartData.length >= 2 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "#f5f5f5",
+      borderRadius: 12,
+      padding: "1rem",
+      marginBottom: 16,
+      border: "1px solid #e0e0e0"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: C.muted,
+      marginBottom: 10,
+      fontWeight: 600
+    }
+  }, "\u8FD1\u671F\u8DA8\u52E2"), /*#__PURE__*/React.createElement(ResponsiveContainer, {
+    width: "100%",
+    height: 180
+  }, /*#__PURE__*/React.createElement(LineChart, {
+    data: chartData,
+    margin: {
+      top: 4,
+      right: 8,
+      left: -20,
+      bottom: 0
+    }
+  }, /*#__PURE__*/React.createElement(CartesianGrid, {
+    strokeDasharray: "3 3",
+    stroke: "#eee"
+  }), /*#__PURE__*/React.createElement(XAxis, {
+    dataKey: "date",
+    tick: {
+      fontSize: 10,
+      fill: "#bbb"
+    },
+    interval: "preserveStartEnd"
+  }), /*#__PURE__*/React.createElement(YAxis, {
+    tick: {
+      fontSize: 10,
+      fill: "#bbb"
+    },
+    domain: ["auto", "auto"]
+  }), /*#__PURE__*/React.createElement(Tooltip, {
+    contentStyle: {
+      fontSize: 12,
+      borderRadius: 8,
+      border: "1px solid #eee"
+    }
+  }), /*#__PURE__*/React.createElement(Line, {
+    type: "monotone",
+    dataKey: "weight",
+    stroke: C.blue,
+    strokeWidth: 2,
+    dot: {
+      r: 3,
+      fill: C.blue
+    },
+    activeDot: {
+      r: 5
+    }
+  })))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: C.muted,
+      marginBottom: 10,
+      fontWeight: 600
+    }
+  }, "\u6240\u6709\u7D00\u9304"), entries.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: "center",
+      padding: "2rem",
+      color: C.hint,
+      fontSize: 14
+    }
+  }, "\u9084\u6C92\u6709\u9AD4\u91CD\u7D00\u9304") : _toConsumableArray(entries).reverse().map(function (e) {
+    return /*#__PURE__*/React.createElement("div", {
+      key: e.id,
+      style: {
+        background: "#fff",
+        border: "1px solid #e8e8e8",
+        borderRadius: 8,
+        padding: "11px 14px",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: 8
       }
-    </div>
-  );
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 14
+      }
+    }, e.date), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        alignItems: "center",
+        gap: 12
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 15,
+        fontWeight: 600
+      }
+    }, e.weight, " kg"), /*#__PURE__*/React.createElement("button", {
+      onClick: function onClick() {
+        return del(e.id);
+      },
+      style: {
+        background: "none",
+        border: "none",
+        cursor: "pointer",
+        fontSize: 18,
+        color: "#ccc",
+        padding: "2px 6px",
+        lineHeight: 1
+      }
+    }, "\xD7")));
+  }));
 }
 
 // ── SHELL ─────────────────────────────────────────────────
-const TABS = [{id:"timer",label:"計時"},{id:"workout",label:"訓練"},{id:"food",label:"飲食"},{id:"weight",label:"體重"}];
-
-  const [tab, setTab] = useState("timer");
-  return (
-    <div style={{maxWidth:480,margin:"0 auto",fontFamily:"-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif",
-      color:"#111",background:"#fff",minHeight:"100vh"}}>
-      <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:6,padding:"0.75rem 1rem",
-        borderBottom:"1px solid #e8e8e8",position:"sticky",top:0,background:"#fff",zIndex:10}}>
-        {TABS.map(t => (
-          <button key={t.id} onClick={() => setTab(t.id)} style={{padding:"9px 0",
-            border:`1px solid ${tab===t.id?"#999":"#ddd"}`,borderRadius:8,
-            background:tab===t.id?"#f0f0f0":"transparent",fontSize:13,cursor:"pointer",
-            fontWeight:tab===t.id?600:400,color:tab===t.id?"#111":"#777",
-            WebkitTapHighlightColor:"transparent"}}>
-            {t.label}
-          </button>
-        ))}
-      </div>
-      <div>
-        {tab==="timer"   && <TimerTab/>}
-        {tab==="workout" && <WorkoutTab/>}
-        {tab==="food"    && <FoodTab/>}
-        {tab==="weight"  && <WeightTab/>}
-      </div>
-    </div>
-  );
+var TABS = [{
+  id: "timer",
+  label: "計時"
+}, {
+  id: "workout",
+  label: "訓練"
+}, {
+  id: "food",
+  label: "飲食"
+}, {
+  id: "weight",
+  label: "體重"
+}];
+function App() {
+  var _useState37 = useState("timer"),
+    _useState38 = _slicedToArray(_useState37, 2),
+    tab = _useState38[0],
+    setTab = _useState38[1];
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 480,
+      margin: "0 auto",
+      fontFamily: "-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif",
+      color: "#111",
+      background: "#fff",
+      minHeight: "100vh"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "grid",
+      gridTemplateColumns: "repeat(4,1fr)",
+      gap: 6,
+      padding: "0.75rem 1rem",
+      borderBottom: "1px solid #e8e8e8",
+      position: "sticky",
+      top: 0,
+      background: "#fff",
+      zIndex: 10
+    }
+  }, TABS.map(function (t) {
+    return /*#__PURE__*/React.createElement("button", {
+      key: t.id,
+      onClick: function onClick() {
+        return setTab(t.id);
+      },
+      style: {
+        padding: "9px 0",
+        border: "1px solid ".concat(tab === t.id ? "#999" : "#ddd"),
+        borderRadius: 8,
+        background: tab === t.id ? "#f0f0f0" : "transparent",
+        fontSize: 13,
+        cursor: "pointer",
+        fontWeight: tab === t.id ? 600 : 400,
+        color: tab === t.id ? "#111" : "#777",
+        WebkitTapHighlightColor: "transparent"
+      }
+    }, t.label);
+  })), /*#__PURE__*/React.createElement("div", null, tab === "timer" && /*#__PURE__*/React.createElement(TimerTab, null), tab === "workout" && /*#__PURE__*/React.createElement(WorkoutTab, null), tab === "food" && /*#__PURE__*/React.createElement(FoodTab, null), tab === "weight" && /*#__PURE__*/React.createElement(WeightTab, null)));
 }
 
-
-const root = ReactDOM.createRoot(document.getElementById('root'));
+var root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(React.createElement(App));
 </script>
-
 <script>
 if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('sw.js').catch(()=>{});
+  navigator.serviceWorker.register('sw.js').catch(function(){});
 }
 </script>
 </body>
