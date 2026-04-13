@@ -1,1 +1,136 @@
-<!DOCTYPE html>\n<html lang="en">\n<head>\n    <meta charset="UTF-8">\n    <meta name="viewport" content="width=device-width, initial-scale=1.0">\n    <title>Health Tracking Application</title>\n    <style>\n        body { font-family: Arial, sans-serif; }\n        .container { max-width: 800px; margin: auto; padding: 20px; }\n        input, button { padding: 10px; margin: 5px; font-size: 16px; }\n    </style>\n</head>\n<body>\n    <div class="container">\n        <h1>Health Tracking Application</h1>\n        <section>\n            <h2>Exercise Logging</h2>\n            <input type="text" id="exercise" placeholder="Enter exercise name"/>\n            <input type="number" id="duration" placeholder="Duration (minutes)"/>\n            <button onclick="logExercise()">Log Exercise</button>\n            <ul id="exercise-log"></ul>\n        </section>\n        <section>\n            <h2>Diet Tracking</h2>\n            <input type="text" id="food" placeholder="Enter food item"/>\n            <input type="number" id="calories" placeholder="Calories"/>\n            <button onclick="logDiet()">Log Food</button>\n            <ul id="diet-log"></ul>\n        </section>\n        <section>\n            <h2>Timer</h2>\n            <input type="number" id="timer-minutes" placeholder="Minutes"/>\n            <button onclick="startTimer()">Start Timer</button>\n            <div id="timer-display"></div>\n        </section>\n    </div>\n    <script>\n        function logExercise() {\n            const exercise = document.getElementById('exercise').value;\n            const duration = document.getElementById('duration').value;\n            const log = document.getElementById('exercise-log');\n            const li = document.createElement('li');\n            li.textContent = \", '' + exercise + ' for ' + duration + ' minutes';\n            log.appendChild(li);\n            document.getElementById('exercise').value = '';\n            document.getElementById('duration').value = '';\n        }\n        function logDiet() {\n            const food = document.getElementById('food').value;\n            const calories = document.getElementById('calories').value;\n            const log = document.getElementById('diet-log');\n            const li = document.createElement('li');\n            li.textContent = \", '' + food + ' - ' + calories + ' calories';\n            log.appendChild(li);\n            document.getElementById('food').value = '';\n            document.getElementById('calories').value = '';\n        }\n        function startTimer() {\n            let minutes = parseInt(document.getElementById('timer-minutes').value);\n            let seconds = minutes * 60;\n            const display = document.getElementById('timer-display');\n            const timer = setInterval(() => {\n                if (seconds <= 0) {\n                    clearInterval(timer);\n                    display.textContent = 'Time is up!';\n                } else {\n                    let mins = Math.floor(seconds / 60);\n                    let secs = seconds % 60;\n                    display.textContent = \"\" + mins + ':' + (secs < 10 ? '0' : '') + secs;\n                    seconds--;\n                }\n            }, 1000);\n        }\n    <\/script>\n</body>\n</html>
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>健康紀錄</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 600px; margin: 0 auto; }
+        .header { text-align: center; color: white; margin-bottom: 30px; }
+        .header h1 { font-size: 32px; margin-bottom: 8px; }
+        .card { background: white; border-radius: 16px; padding: 24px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .card h2 { font-size: 20px; margin-bottom: 16px; color: #333; }
+        .input-group { display: flex; gap: 8px; margin-bottom: 16px; }
+        input { flex: 1; padding: 12px 14px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 14px; }
+        input:focus { outline: none; border-color: #667eea; }
+        button { padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
+        button:hover { transform: translateY(-2px); }
+        .list-item { background: #f5f5f5; padding: 12px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; }
+        .timer-display { font-size: 48px; font-weight: bold; text-align: center; color: #667eea; margin: 20px 0; }
+        .tab-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tab-btn { flex: 1; padding: 12px; background: rgba(255,255,255,0.3); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; }
+        .tab-btn.active { background: white; color: #667eea; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header"><h1>💪 健康紀錄</h1></div>
+        <div class="tab-buttons">
+            <button class="tab-btn active" onclick="switchTab('exercise')">🏋️ 運動</button>
+            <button class="tab-btn" onclick="switchTab('diet')">🍎 飲食</button>
+            <button class="tab-btn" onclick="switchTab('timer')">⏱️ 計時</button>
+        </div>
+        <div id="exercise" class="tab-content active">
+            <div class="card">
+                <h2>🏋️ 運動紀錄</h2>
+                <div class="input-group">
+                    <input type="text" id="exercise-name" placeholder="運動名稱"/>
+                    <input type="number" id="exercise-duration" placeholder="分鐘" min="1"/>
+                    <button onclick="logExercise()">新增</button>
+                </div>
+                <div id="exercise-log"></div>
+            </div>
+        </div>
+        <div id="diet" class="tab-content">
+            <div class="card">
+                <h2>🍎 飲食紀錄</h2>
+                <div class="input-group">
+                    <input type="text" id="food-name" placeholder="食物名稱"/>
+                    <input type="number" id="food-calories" placeholder="卡路里" min="1"/>
+                    <button onclick="logDiet()">新增</button>
+                </div>
+                <div id="diet-log"></div>
+            </div>
+        </div>
+        <div id="timer" class="tab-content">
+            <div class="card">
+                <h2>⏱️ 計時器</h2>
+                <div class="input-group">
+                    <input type="number" id="timer-minutes" placeholder="分鐘" min="1" value="5"/>
+                    <button onclick="startTimer()">開始</button>
+                    <button onclick="stopTimer()" style="background: #ff6b6b;">停止</button>
+                </div>
+                <div class="timer-display" id="timer-display">00:00</div>
+            </div>
+        </div>
+    </div>
+    <script>
+        let exercises = JSON.parse(localStorage.getItem('exercises') || '[]');
+        let meals = JSON.parse(localStorage.getItem('meals') || '[]');
+        let timerInterval = null;
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(tab).classList.add('active');
+            event.target.classList.add('active');
+        }
+        function logExercise() {
+            const name = document.getElementById('exercise-name').value;
+            const duration = document.getElementById('exercise-duration').value;
+            if (!name.trim() || !duration) { alert('請輸入運動名稱和時間'); return; }
+            exercises.push({ name: name.trim(), duration: parseInt(duration) });
+            localStorage.setItem('exercises', JSON.stringify(exercises));
+            document.getElementById('exercise-name').value = '';
+            document.getElementById('exercise-duration').value = '';
+            renderExercises();
+        }
+        function renderExercises() {
+            const log = document.getElementById('exercise-log');
+            if (exercises.length === 0) { log.innerHTML = '<p style="color: #999; text-align: center;">還沒有紀錄呢，加油！💪</p>'; return; }
+            log.innerHTML = exercises.map((ex, i) => `<div class="list-item"><div><strong>${ex.name}</strong> - ${ex.duration} 分鐘</div><button onclick="deleteExercise(${i})">刪除</button></div>`).join('');
+        }
+        function deleteExercise(i) { exercises.splice(i, 1); localStorage.setItem('exercises', JSON.stringify(exercises)); renderExercises(); }
+        function logDiet() {
+            const name = document.getElementById('food-name').value;
+            const calories = document.getElementById('food-calories').value;
+            if (!name.trim() || !calories) { alert('請輸入食物名稱和卡路里'); return; }
+            meals.push({ name: name.trim(), calories: parseInt(calories) });
+            localStorage.setItem('meals', JSON.stringify(meals));
+            document.getElementById('food-name').value = '';
+            document.getElementById('food-calories').value = '';
+            renderMeals();
+        }
+        function renderMeals() {
+            const log = document.getElementById('diet-log');
+            if (meals.length === 0) { log.innerHTML = '<p style="color: #999; text-align: center;">開始記錄你的飲食吧 🍎</p>'; return; }
+            const total = meals.reduce((s, m) => s + m.calories, 0);
+            log.innerHTML = `<div style="background: #f0f0f0; padding: 10px; border-radius: 8px; margin-bottom: 10px; text-align: center;"><strong>今日總計: ${total} 卡</strong></div>` + meals.map((m, i) => `<div class="list-item"><div><strong>${m.name}</strong> - ${m.calories} 卡</div><button onclick="deleteMeal(${i})">刪除</button></div>`).join('');
+        }
+        function deleteMeal(i) { meals.splice(i, 1); localStorage.setItem('meals', JSON.stringify(meals)); renderMeals(); }
+        function startTimer() {
+            if (timerInterval) return;
+            let minutes = parseInt(document.getElementById('timer-minutes').value) || 5;
+            let seconds = minutes * 60;
+            timerInterval = setInterval(() => {
+                const m = Math.floor(seconds / 60);
+                const s = seconds % 60;
+                document.getElementById('timer-display').textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+                if (seconds <= 0) { clearInterval(timerInterval); timerInterval = null; alert('休息時間到！'); }
+                seconds--;
+            }, 1000);
+        }
+        function stopTimer() { if (timerInterval) { clearInterval(timerInterval); timerInterval = null; } document.getElementById('timer-display').textContent = '00:00'; }
+        renderExercises();
+        renderMeals();
+    </script>
+</body>
+</html>
