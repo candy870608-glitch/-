@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
@@ -11,57 +10,62 @@
 <title>健康紀錄</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
-html{background:#f0ede8}
-body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;background:#f0ede8;color:#2d2d2d;max-width:480px;margin:0 auto;min-height:100vh}
-#root{padding-bottom:env(safe-area-inset-bottom,16px)}
-.nav{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:10px 12px;border-bottom:1px solid #e2ddd8;position:sticky;top:0;background:#f0ede8;z-index:10}
-.nav button{padding:9px 0;border:1px solid #ddd;border-radius:12px;background:transparent;font-size:12px;cursor:pointer;color:#999;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:2px;line-height:1.3}
-.nav button.active{border-color:#c9b8a8;background:#fff8f3;color:#5a3e2b;font-weight:600}
-.tab{display:none;padding:12px 14px 32px}
+html,body{background:#f0ede8}
+body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;color:#2d2d2d;max-width:480px;margin:0 auto;min-height:100vh}
+.nav{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:10px 12px;border-bottom:1px solid #e2ddd8;position:sticky;top:0;background:#f0ede8;z-index:20}
+.nav button{padding:8px 0;border:1px solid #e0d8d0;border-radius:12px;background:transparent;font-size:11px;cursor:pointer;color:#aaa;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:2px;width:100%}
+.nav button span{font-size:18px}
+.nav button.active{border-color:#c9a882;background:#fff8f3;color:#5a3e2b;font-weight:600}
+.tab{display:none;padding-bottom:40px}
 .tab.active{display:block}
+/* MONTHLY CALENDAR */
+.cal-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px 6px}
+.cal-month-label{font-size:16px;font-weight:600;color:#2d2d2d}
+.cal-nav-btn{background:none;border:none;font-size:20px;color:#c9a882;cursor:pointer;padding:4px 12px;font-family:inherit;line-height:1}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);padding:0 6px 8px}
+.cal-wd{text-align:center;font-size:11px;color:#bbb;padding:6px 0 4px;font-weight:500}
+.cal-cell{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4px 2px;cursor:pointer;border-radius:10px;min-height:46px;gap:3px;border:none;background:transparent;font-family:inherit;width:100%}
+.cal-cell .dnum{font-size:15px;color:#aaa;line-height:1}
+.cal-cell.cur-month .dnum{color:#2d2d2d}
+.cal-cell.today .dnum{color:#c9a882;font-weight:700}
+.cal-cell.selected{background:#c9a882}
+.cal-cell.selected .dnum{color:#fff!important;font-weight:700}
+.cal-cell.other-month .dnum{color:#ddd}
+.dot-row{display:flex;gap:2px;align-items:center;min-height:5px}
+.dot{width:5px;height:5px;border-radius:50%;background:#c9a882;flex-shrink:0}
+.cal-cell.selected .dot{background:rgba(255,255,255,0.8)}
+/* CONTENT */
+.content{padding:10px 14px 0}
+.card{background:#fffcf9;border-radius:16px;padding:14px;margin-bottom:12px;border:1px solid #e8e0d8}
+.btn-main{width:100%;padding:12px;border:none;border-radius:12px;background:linear-gradient(135deg,#c9a882,#a07850);font-size:15px;font-weight:600;color:#fff;margin-top:8px;font-family:inherit;cursor:pointer}
 input{width:100%;padding:10px 8px;border:1px solid #e0d8d0;border-radius:10px;font-size:14px;font-family:inherit;background:#fffcf9;color:#2d2d2d;outline:none;-webkit-appearance:none}
-button{font-family:inherit;cursor:pointer}
-.card{background:#fffcf9;border-radius:16px;padding:14px;margin-bottom:12px;border:1px solid #e8e0d8;box-shadow:0 2px 8px rgba(180,150,120,0.07)}
-.btn-main{width:100%;padding:12px;border:none;border-radius:12px;background:linear-gradient(135deg,#c9a882,#a07850);font-size:15px;font-weight:600;color:#fff;margin-top:8px;letter-spacing:.3px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
 .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-.label{font-size:12px;color:#777;margin-bottom:4px}
-.hint{font-size:12px;color:#aaa}
+.hint{font-size:12px;color:#bbb}
+.label{font-size:12px;color:#aaa;margin-bottom:4px}
 .err{font-size:12px;color:#e24b4a;margin:4px 0}
-.group-hd{width:100%;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;background:transparent;border:none;text-align:left;cursor:pointer}
-.group-body{border-top:1px solid #f0e8e0}
-.row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid #f5ede6}
-.row:last-child{border-bottom:none}
-.row:nth-child(even){background:#fff8f3}
-.del-btn{background:none;border:none;font-size:18px;color:#d4b8a8;padding:2px 6px;line-height:1}
-.empty{text-align:center;padding:32px;color:#bbb;font-size:14px}
+.del-btn{background:none;border:none;font-size:18px;color:#d4b8a8;padding:2px 6px;line-height:1;cursor:pointer;font-family:inherit}
+.group-hd{width:100%;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;background:transparent;border:none;text-align:left;cursor:pointer;font-family:inherit}
+.frow{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid #f5ede6}
+.frow:last-child{border-bottom:none}
+.frow:nth-child(even){background:#fff8f3}
 .bar-bg{background:#e8ddd4;border-radius:4px;height:5px;margin-top:6px}
 .bar-fill{height:5px;border-radius:4px;transition:width .4s}
-.meal-hd{width:100%;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;background:transparent;border:none;cursor:pointer;text-align:left}
-.pill{flex:1;padding:7px 0;border:1px solid #ddd;border-radius:8px;background:transparent;font-size:12px;color:#777}
+.pill{flex:1;padding:7px 0;border:1px solid #e0d8d0;border-radius:8px;background:transparent;font-size:12px;color:#aaa;font-family:inherit;cursor:pointer}
 .pill.active{border-color:#c9a882;background:#fff8f0;color:#7a5030;font-weight:600}
-.info-box{background:#fffbe6;border:1px solid #f0d060;border-radius:10px;padding:10px 14px;font-size:13px;color:#7a5c00;margin-bottom:12px}
-/* Timer */
+.meal-hd{width:100%;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;background:transparent;border:none;cursor:pointer;text-align:left;font-family:inherit}
+.info-box{background:#fef9f0;border:1px solid #e8d4a8;border-radius:10px;padding:10px 14px;font-size:13px;color:#8a6030;margin-bottom:12px}
+.empty{text-align:center;padding:32px;color:#ccc;font-size:14px}
+/* TIMER */
 .timer-wrap{display:flex;flex-direction:column;align-items:center;padding:24px 16px}
 .ring-cont{position:relative;width:200px;height:200px;margin-bottom:20px}
-.timer-num{font-size:44px;font-weight:500;letter-spacing:-1px}
-.t-label{font-size:12px;color:#777;margin-top:4px}
 .seg-btns{display:flex;gap:8px;width:100%;max-width:280px;margin-bottom:16px}
-.seg-btn{flex:1;padding:10px 0;border:1px solid #ddd;border-radius:8px;background:transparent;font-size:12px;color:#777}
+.seg-btn{flex:1;padding:10px 0;border:1px solid #e0d8d0;border-radius:10px;background:transparent;font-size:12px;color:#aaa;font-family:inherit;cursor:pointer}
 .seg-btn.active{border-color:#c9a882;background:#fff8f0;color:#7a5030;font-weight:600}
 .ctrl-btns{display:flex;gap:8px;width:100%;max-width:280px}
 .done-banner{background:#fef4e8;border:1px solid #e0a86a;border-radius:10px;padding:10px 18px;font-size:14px;color:#7a4f20;margin-bottom:16px;width:100%;text-align:center}
-/* Cal strip */
-.cal-strip{display:flex;gap:6px;overflow-x:auto;padding:10px 12px;border-bottom:1px solid #eee;scrollbar-width:none;-webkit-overflow-scrolling:touch}
-.cal-strip::-webkit-scrollbar{display:none}
-.cal-day{flex-shrink:0;width:44px;display:flex;flex-direction:column;align-items:center;padding:6px 0;border-radius:10px;border:none;background:transparent;cursor:pointer;font-family:inherit}
-.cal-day .wd{font-size:10px;color:#aaa;margin-bottom:2px}
-.cal-day .dd{font-size:15px;color:#777}
-.cal-day.today .dd{color:#c9a882;font-weight:600}
-.cal-day.selected{background:#c9a882}
-.cal-day.selected .wd,.cal-day.selected .dd{color:#fff;font-weight:600}
 canvas{width:100%;height:160px;display:block}
+.wt-list-row{background:#fffcf9;border:1px solid #e8ddd4;border-radius:12px;margin-bottom:8px;padding:11px 14px;display:flex;justify-content:space-between;align-items:center}
 </style>
 </head>
 <body>
@@ -72,22 +76,21 @@ canvas{width:100%;height:160px;display:block}
     <button onclick="showTab('food')" id="nb-food"><span>🥗</span>飲食</button>
     <button onclick="showTab('weight')" id="nb-weight"><span>⚖️</span>體重</button>
   </nav>
-
+ 
   <!-- TIMER -->
-
   <div id="tab-timer" class="tab active">
     <div class="timer-wrap">
       <div id="done-banner" class="done-banner" style="display:none">休息時間到！繼續下一組 💪</div>
       <div class="ring-cont">
         <svg width="200" height="200" viewBox="0 0 200 200" style="transform:rotate(-90deg)">
-          <circle cx="100" cy="100" r="88" fill="none" stroke="#eee" stroke-width="8"/>
+          <circle cx="100" cy="100" r="88" fill="none" stroke="#ede8e0" stroke-width="8"/>
           <circle id="ring" cx="100" cy="100" r="88" fill="none" stroke="#c9a882" stroke-width="8"
             stroke-dasharray="553" stroke-dashoffset="0" stroke-linecap="round"
             style="transition:stroke-dashoffset .9s linear,stroke .3s"/>
         </svg>
         <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center">
-          <div class="timer-num" id="timer-display">1:00</div>
-          <div class="t-label" id="timer-label">準備好了嗎</div>
+          <div style="font-size:44px;font-weight:500;letter-spacing:-1px" id="timer-display">1:00</div>
+          <div style="font-size:12px;color:#bbb;margin-top:4px" id="timer-label">準備好了嗎</div>
         </div>
       </div>
       <div class="seg-btns">
@@ -98,16 +101,16 @@ canvas{width:100%;height:160px;display:block}
       </div>
       <div class="ctrl-btns">
         <button class="btn-main" id="btn-toggle" onclick="toggleTimer()" style="flex:2;margin-top:0">開始</button>
-        <button onclick="resetTimer()" style="flex:1;padding:13px;border:1px solid #e0d8d0;border-radius:12px;background:transparent;font-size:14px;color:#999">重設</button>
+        <button onclick="resetTimer()" style="flex:1;padding:13px;border:1px solid #e0d8d0;border-radius:12px;background:transparent;font-size:14px;color:#aaa;font-family:inherit;cursor:pointer">重設</button>
       </div>
     </div>
   </div>
-
+ 
   <!-- WORKOUT -->
-
   <div id="tab-workout" class="tab">
-    <div id="wk-cal" class="cal-strip"></div>
-    <div style="padding:12px 0">
+    <div id="wk-cal-header" class="cal-header"></div>
+    <div id="wk-cal-grid" class="cal-grid"></div>
+    <div class="content">
       <div class="card">
         <input id="wk-name" placeholder="動作名稱（深蹲、臥推...）" style="margin-bottom:8px">
         <div class="grid2" style="margin-bottom:8px">
@@ -120,63 +123,445 @@ canvas{width:100%;height:160px;display:block}
       <div id="wk-list"></div>
     </div>
   </div>
-
+ 
   <!-- FOOD -->
-
   <div id="tab-food" class="tab">
-    <div id="fd-cal" class="cal-strip"></div>
-    <div style="padding:12px 0">
+    <div id="fd-cal-header" class="cal-header"></div>
+    <div id="fd-cal-grid" class="cal-grid"></div>
+    <div class="content">
       <div id="fd-summary" class="card"></div>
       <div class="info-box">📷 想用拍照辨識？把食物照片傳到對話框，我幫你估算熱量＋蛋白質，再填到這裡</div>
       <div id="fd-form"></div>
       <div id="fd-list"></div>
     </div>
   </div>
-
+ 
   <!-- WEIGHT -->
-
   <div id="tab-weight" class="tab">
-    <div id="wt-latest" class="card" style="display:none"></div>
-    <div class="grid2" style="margin-bottom:12px">
-      <input id="wt-input" placeholder="今日體重 (kg)" inputmode="decimal">
-      <button onclick="addWeight()" style="padding:10px;border:none;border-radius:12px;background:linear-gradient(135deg,#c9a882,#a07850);font-size:14px;font-weight:600;color:#fff">記錄</button>
+    <div id="wt-cal-header" class="cal-header"></div>
+    <div id="wt-cal-grid" class="cal-grid"></div>
+    <div class="content">
+      <div id="wt-latest" class="card" style="display:none"></div>
+      <div class="grid2" style="margin-bottom:12px">
+        <input id="wt-input" placeholder="今日體重 (kg)" inputmode="decimal">
+        <button onclick="addWeight()" style="padding:10px;border:none;border-radius:12px;background:linear-gradient(135deg,#c9a882,#a07850);font-size:14px;font-weight:600;color:#fff;font-family:inherit;cursor:pointer">記錄</button>
+      </div>
+      <div id="wt-chart-wrap" class="card" style="display:none">
+        <div class="label" style="font-weight:600;margin-bottom:8px">近期趨勢</div>
+        <canvas id="wt-chart"></canvas>
+      </div>
+      <div class="label" style="font-weight:600;margin-bottom:8px">所有紀錄</div>
+      <div id="wt-list"></div>
     </div>
-    <div id="wt-chart-wrap" class="card" style="display:none">
-      <div class="label" style="margin-bottom:8px;font-weight:600">近期趨勢</div>
-      <canvas id="wt-chart"></canvas>
-    </div>
-    <div class="label" style="font-weight:600;margin-bottom:8px">所有紀錄</div>
-    <div id="wt-list"></div>
   </div>
 </div>
-
+ 
 <script>
-// ── storage ──────────────────────────────────────────────
-function ls(key,def){try{var v=localStorage.getItem(key);return v?JSON.parse(v):def;}catch(e){return def;}}
-function sv(key,val){try{localStorage.setItem(key,JSON.stringify(val));}catch(e){}}
-
-// ── date helpers ──────────────────────────────────────────
+// ── helpers ──────────────────────────────────────────────
+function ls(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch(e){return d;}}
+function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
 function todayStr(){var d=new Date();return d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate();}
 function timeStr(){return new Date().toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'});}
 var WDAY=['日','一','二','三','四','五','六'];
-
+ 
 // ── tab ───────────────────────────────────────────────────
-var currentTab='timer';
 function showTab(t){
   document.querySelectorAll('.tab').forEach(function(el){el.classList.remove('active');});
   document.querySelectorAll('.nav button').forEach(function(el){el.classList.remove('active');});
   document.getElementById('tab-'+t).classList.add('active');
   document.getElementById('nb-'+t).classList.add('active');
-  currentTab=t;
   if(t==='workout')renderWorkout();
   if(t==='food')renderFood();
   if(t==='weight')renderWeight();
 }
-
-// ── calendar strip ────────────────────────────────────────
-var wkDate=todayStr(), fdDate=todayStr();
-function buildCal(containerId, current, onChange){
-  var el=document.getElementById(containerId);
-  el.innerHTML='';
-  var today=new Date();
-  for(var i=13
+ 
+// ── monthly calendar ──────────────────────────────────────
+// Each tab has its own calendar state
+var cals = {
+  wk:  { year: new Date().getFullYear(), month: new Date().getMonth(), selected: todayStr() },
+  fd:  { year: new Date().getFullYear(), month: new Date().getMonth(), selected: todayStr() },
+  wt:  { year: new Date().getFullYear(), month: new Date().getMonth(), selected: todayStr() }
+};
+ 
+function buildMonthCal(prefix, state, getDataDates, onSelect) {
+  var year = state.year, month = state.month;
+  var label = year + '年' + (month+1) + '月';
+  var hdr = document.getElementById(prefix+'-cal-header');
+  hdr.innerHTML =
+    '<button class="cal-nav-btn" onclick="calPrev(\''+prefix+'\')">‹</button>'
+    +'<div class="cal-month-label">'+label+'</div>'
+    +'<button class="cal-nav-btn" onclick="calNext(\''+prefix+'\')">›</button>';
+ 
+  var grid = document.getElementById(prefix+'-cal-grid');
+  grid.innerHTML = '';
+  // weekday headers
+  WDAY.forEach(function(w){
+    var d=document.createElement('div'); d.className='cal-wd'; d.textContent=w; grid.appendChild(d);
+  });
+ 
+  var today = todayStr();
+  var dataDates = getDataDates();
+  var firstDay = new Date(year, month, 1).getDay();
+  var daysInMonth = new Date(year, month+1, 0).getDate();
+  var daysInPrev = new Date(year, month, 0).getDate();
+ 
+  // total cells: fill to complete weeks
+  var totalCells = Math.ceil((firstDay + daysInMonth) / 7) * 7;
+ 
+  for(var i=0; i<totalCells; i++){
+    var btn = document.createElement('button');
+    btn.className = 'cal-cell';
+    var dayNum, ds, isCurrentMonth;
+    if(i < firstDay){
+      dayNum = daysInPrev - firstDay + 1 + i;
+      var pm = month === 0 ? 12 : month;
+      var py = month === 0 ? year-1 : year;
+      ds = py+'/'+ pm +'/'+dayNum;
+      isCurrentMonth = false;
+    } else if(i >= firstDay + daysInMonth){
+      dayNum = i - firstDay - daysInMonth + 1;
+      var nm = month === 11 ? 1 : month+2;
+      var ny = month === 11 ? year+1 : year;
+      ds = ny+'/'+nm+'/'+dayNum;
+      isCurrentMonth = false;
+    } else {
+      dayNum = i - firstDay + 1;
+      ds = year+'/'+(month+1)+'/'+dayNum;
+      isCurrentMonth = true;
+    }
+ 
+    btn.classList.add(isCurrentMonth ? 'cur-month' : 'other-month');
+    if(ds === today) btn.classList.add('today');
+    if(ds === state.selected) btn.classList.add('selected');
+ 
+    var dnum = document.createElement('span'); dnum.className='dnum'; dnum.textContent=dayNum;
+    btn.appendChild(dnum);
+ 
+    // dots for data
+    var dots = dataDates[ds] || 0;
+    if(dots > 0){
+      btn.classList.add('has-data');
+      var dr = document.createElement('div'); dr.className='dot-row';
+      var n = Math.min(dots, 3);
+      for(var d2=0;d2<n;d2++){var dot=document.createElement('div');dot.className='dot';dr.appendChild(dot);}
+      btn.appendChild(dr);
+    }
+ 
+    (function(dateStr){
+      btn.onclick = function(){ onSelect(dateStr); };
+    })(ds);
+ 
+    grid.appendChild(btn);
+  }
+}
+ 
+function calPrev(prefix){
+  var s=cals[prefix];
+  if(s.month===0){s.month=11;s.year--;}else{s.month--;}
+  if(prefix==='wk')renderWorkout();
+  else if(prefix==='fd')renderFood();
+  else renderWeight();
+}
+function calNext(prefix){
+  var s=cals[prefix];
+  if(s.month===11){s.month=0;s.year++;}else{s.month++;}
+  if(prefix==='wk')renderWorkout();
+  else if(prefix==='fd')renderFood();
+  else renderWeight();
+}
+ 
+// ── TIMER ─────────────────────────────────────────────────
+var tTotal=60,tRem=60,tRunning=false,tDone=false,tIv=null;
+var CIRC=2*Math.PI*88;
+function pickRest(s,btn){
+  if(tRunning)return;
+  tTotal=s;tRem=s;tDone=false;
+  document.querySelectorAll('.seg-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active'); updateTimer();
+}
+function updateTimer(){
+  var m=Math.floor(tRem/60),x=tRem%60;
+  document.getElementById('timer-display').textContent=m+':'+(x<10?'0':'')+x;
+  var frac=tRem/tTotal;
+  document.getElementById('ring').style.strokeDashoffset=CIRC*(1-frac);
+  document.getElementById('ring').style.stroke=frac>0.5?'#c9a882':frac>0.25?'#e09060':'#e24b4a';
+}
+function toggleTimer(){
+  var banner=document.getElementById('done-banner'),btn=document.getElementById('btn-toggle'),lbl=document.getElementById('timer-label');
+  banner.style.display='none';
+  if(tDone){tDone=false;tRem=tTotal;updateTimer();btn.textContent='開始';lbl.textContent='準備好了嗎';return;}
+  if(!tRunning){
+    tRunning=true;btn.textContent='暫停';lbl.textContent='休息中...';
+    tIv=setInterval(function(){
+      tRem--;updateTimer();
+      if(tRem<=0){
+        clearInterval(tIv);tRunning=false;tDone=true;tRem=tTotal;updateTimer();
+        btn.textContent='再一組';lbl.textContent='完成！';banner.style.display='block';
+        try{var a=new AudioContext(),o=a.createOscillator(),g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.value=880;g.gain.setValueAtTime(0.3,a.currentTime);g.gain.exponentialRampToValueAtTime(0.001,a.currentTime+0.5);o.start();o.stop(a.currentTime+0.5);}catch(e){}
+      }
+    },1000);
+  } else {
+    clearInterval(tIv);tRunning=false;btn.textContent='繼續';lbl.textContent='已暫停';
+  }
+}
+function resetTimer(){
+  clearInterval(tIv);tRunning=false;tDone=false;tRem=tTotal;
+  document.getElementById('btn-toggle').textContent='開始';
+  document.getElementById('timer-label').textContent='準備好了嗎';
+  document.getElementById('done-banner').style.display='none';
+  updateTimer();
+}
+ 
+// ── WORKOUT ───────────────────────────────────────────────
+var wkExp={};
+function wkDataDates(){
+  var map={};
+  ls('wt_v4',[]).forEach(function(e){ map[e.date]=(map[e.date]||0)+1; });
+  return map;
+}
+function addWorkout(){
+  var name=document.getElementById('wk-name').value.trim();
+  var w=parseFloat(document.getElementById('wk-weight').value);
+  var r=parseInt(document.getElementById('wk-reps').value);
+  var err=document.getElementById('wk-err');
+  if(!name){err.textContent='請填入動作名稱';return;}
+  if(isNaN(w)||w<=0){err.textContent='請填入正確重量';return;}
+  if(isNaN(r)||r<=0){err.textContent='請填入次數';return;}
+  err.textContent='';
+  var entries=ls('wt_v4',[]);
+  entries.push({id:String(Date.now()),name:name,weight:w,reps:r,date:cals.wk.selected,time:timeStr()});
+  sv('wt_v4',entries);
+  document.getElementById('wk-reps').value='';
+  wkExp[name]=true;
+  renderWorkout();
+}
+function delWorkout(id){sv('wt_v4',ls('wt_v4',[]).filter(function(e){return e.id!==id;}));renderWorkout();}
+function renderWorkout(){
+  buildMonthCal('wk', cals.wk, wkDataDates, function(ds){
+    cals.wk.selected=ds; renderWorkout();
+  });
+  var selDate=cals.wk.selected;
+  var entries=ls('wt_v4',[]).filter(function(e){return e.date===selDate;});
+  var groups={};
+  entries.forEach(function(e){if(!groups[e.name])groups[e.name]=[];groups[e.name].push(e);});
+  var list=document.getElementById('wk-list');
+  // show/hide input form only for today or past (allow past edits)
+  var dateLabel = selDate===todayStr()?'今天':selDate;
+  var listHtml = '<div style="font-size:12px;color:#aaa;margin-bottom:10px;font-weight:500">'+dateLabel+'</div>';
+  if(!Object.keys(groups).length){
+    list.innerHTML=listHtml+'<div class="empty">這天還沒有訓練紀錄 🌿</div>';return;
+  }
+  list.innerHTML=listHtml;
+  Object.keys(groups).forEach(function(gname){
+    var glist=groups[gname];
+    var vol=glist.reduce(function(s,e){return s+e.weight*e.reps;},0);
+    var isOpen=wkExp[gname]!==false;
+    var wrap=document.createElement('div');
+    wrap.style.cssText='background:#fffcf9;border:1px solid #e8ddd4;border-radius:14px;margin-bottom:10px;overflow:hidden';
+    var hd=document.createElement('button'); hd.className='group-hd';
+    hd.innerHTML='<div><div style="font-size:15px;font-weight:600;color:#2d2d2d">'+gname+'</div>'
+      +'<div class="hint" style="margin-top:2px">'+glist.length+' 組・總量 '+Math.round(vol)+' kg</div></div>'
+      +'<span style="color:#d4b8a8;font-size:14px;display:inline-block;transform:rotate('+(isOpen?'180':'0')+'deg);transition:transform .2s">▼</span>';
+    var body=document.createElement('div');
+    body.style.cssText='border-top:1px solid #f0e8e0;display:'+(isOpen?'block':'none');
+    glist.forEach(function(e,i){
+      var row=document.createElement('div'); row.className='frow';
+      row.innerHTML='<div style="font-size:13px"><span style="font-weight:600;color:#2d2d2d">第'+(i+1)+'組</span>'
+        +'<span style="color:#bbb;margin-left:8px">'+e.weight+'kg × '+e.reps+'次</span></div>'
+        +'<div style="display:flex;align-items:center;gap:8px"><span class="hint">'+e.time+'</span>'
+        +'<button class="del-btn" onclick="delWorkout(\''+e.id+'\')">×</button></div>';
+      body.appendChild(row);
+    });
+    hd.onclick=function(){
+      var open=body.style.display==='block';
+      body.style.display=open?'none':'block';
+      wkExp[gname]=!open;
+      hd.querySelector('span').style.transform='rotate('+(open?'0':'180')+'deg)';
+    };
+    wrap.appendChild(hd);wrap.appendChild(body);list.appendChild(wrap);
+  });
+}
+ 
+// ── FOOD ──────────────────────────────────────────────────
+var MEALS=['早餐','午餐','晚餐','點心'];
+var MICONS=['🌅','☀️','🌇','🍎'];
+var selMeal=0, fdExp={0:true,1:true,2:true,3:true};
+var CAL_GOAL=1400, PRO_GOAL=120;
+function fdDataDates(){
+  var map={};
+  ls('food_v4',[]).forEach(function(e){ map[e.date]=(map[e.date]||0)+1; });
+  return map;
+}
+function addFood(){
+  var name=document.getElementById('fd-name').value.trim();
+  var cal=parseInt(document.getElementById('fd-cal-inp').value)||0;
+  var pro=parseInt(document.getElementById('fd-pro').value)||0;
+  if(!name||!cal)return;
+  var entries=ls('food_v4',[]);
+  entries.push({id:String(Date.now()),date:cals.fd.selected,time:timeStr(),meal:selMeal,name:name,cal:cal,protein:pro});
+  sv('food_v4',entries);
+  document.getElementById('fd-name').value='';
+  document.getElementById('fd-cal-inp').value='';
+  document.getElementById('fd-pro').value='';
+  renderFood();
+}
+function delFood(id){sv('food_v4',ls('food_v4',[]).filter(function(e){return e.id!==id;}));renderFood();}
+function renderFood(){
+  buildMonthCal('fd', cals.fd, fdDataDates, function(ds){
+    cals.fd.selected=ds; renderFood();
+  });
+  var selDate=cals.fd.selected;
+  var entries=ls('food_v4',[]).filter(function(e){return e.date===selDate;});
+  var totalCal=entries.reduce(function(s,e){return s+e.cal;},0);
+  var totalPro=entries.reduce(function(s,e){return s+e.protein;},0);
+  document.getElementById('fd-summary').innerHTML=
+    '<div class="grid2">'
+    +'<div><div style="display:flex;justify-content:space-between"><span class="label">🔥 卡路里</span><span class="hint">'+Math.round(totalCal)+'/'+CAL_GOAL+'kcal</span></div><div class="bar-bg"><div class="bar-fill" style="background:#c9a060;width:'+Math.min(totalCal/CAL_GOAL,1)*100+'%"></div></div></div>'
+    +'<div><div style="display:flex;justify-content:space-between"><span class="label">💪 蛋白質</span><span class="hint">'+Math.round(totalPro)+'/'+PRO_GOAL+'g</span></div><div class="bar-bg"><div class="bar-fill" style="background:#7aa8c9;width:'+Math.min(totalPro/PRO_GOAL,1)*100+'%"></div></div></div>'
+    +'</div>';
+  var formEl=document.getElementById('fd-form');
+  formEl.innerHTML='<div class="card">'
+    +'<div class="grid4" style="margin-bottom:10px">'+MEALS.map(function(l,i){
+      return '<button class="pill'+(selMeal===i?' active':'')+'" onclick="selMeal='+i+';renderFood()">'+MICONS[i]+' '+l+'</button>';
+    }).join('')+'</div>'
+    +'<input id="fd-name" placeholder="食物名稱" style="margin-bottom:8px">'
+    +'<div class="grid2" style="margin-bottom:8px">'
+    +'<input id="fd-cal-inp" placeholder="熱量 kcal" inputmode="numeric">'
+    +'<input id="fd-pro" placeholder="蛋白質 g" inputmode="numeric">'
+    +'</div>'
+    +'<button class="btn-main" onclick="addFood()">+ 加入紀錄</button>'
+    +'</div>';
+  var listEl=document.getElementById('fd-list'); listEl.innerHTML='';
+  MEALS.forEach(function(label,mi){
+    var mList=entries.filter(function(e){return e.meal===mi;});
+    var mCal=mList.reduce(function(s,e){return s+e.cal;},0);
+    var mPro=mList.reduce(function(s,e){return s+e.protein;},0);
+    var isOpen=!!fdExp[mi];
+    var wrap=document.createElement('div');
+    wrap.style.cssText='background:#fffcf9;border:1px solid #e8ddd4;border-radius:14px;margin-bottom:10px;overflow:hidden';
+    var hd=document.createElement('button'); hd.className='meal-hd';
+    hd.innerHTML='<div style="display:flex;align-items:center;gap:10px">'
+      +'<span style="font-size:18px">'+MICONS[mi]+'</span>'
+      +'<div><div style="font-size:14px;font-weight:600;color:#2d2d2d">'+label+'</div>'
+      +(mList.length?'<div class="hint">'+Math.round(mCal)+' kcal・蛋白 '+Math.round(mPro)+'g</div>':'')
+      +'</div></div>'
+      +'<div style="display:flex;align-items:center;gap:8px">'
+      +'<span style="font-size:13px;font-weight:600;color:'+(mCal>0?'#5a3e2b':'#ccc')+'">'+(mCal>0?Math.round(mCal)+'kcal':'–')+'</span>'
+      +'<span style="color:#d4b8a8;font-size:14px;display:inline-block;transform:rotate('+(isOpen?'180':'0')+'deg);transition:transform .2s">▼</span>'
+      +'</div>';
+    var body=document.createElement('div');
+    body.style.cssText='border-top:1px solid #f0e8e0;display:'+(isOpen?'block':'none');
+    if(!mList.length){
+      body.innerHTML='<div style="padding:12px 14px;font-size:13px;color:#ccc;text-align:center">尚無紀錄</div>';
+    } else {
+      mList.forEach(function(e){
+        var row=document.createElement('div'); row.className='frow';
+        row.innerHTML='<div><div style="font-size:13px;font-weight:500;color:#2d2d2d">'+e.name+'</div>'
+          +'<div class="hint">蛋白質 '+e.protein+'g</div></div>'
+          +'<div style="display:flex;align-items:center;gap:8px">'
+          +'<div style="text-align:right"><div style="font-size:13px;font-weight:600;color:#5a3e2b">'+e.cal+'kcal</div>'
+          +'<div class="hint">'+e.time+'</div></div>'
+          +'<button class="del-btn" onclick="delFood(\''+e.id+'\')">×</button></div>';
+        body.appendChild(row);
+      });
+    }
+    hd.onclick=function(){
+      var open=body.style.display==='block';
+      body.style.display=open?'none':'block';
+      fdExp[mi]=!open;
+      hd.querySelector('span:last-child').style.transform='rotate('+(open?'0':'180')+'deg)';
+    };
+    wrap.appendChild(hd);wrap.appendChild(body);listEl.appendChild(wrap);
+  });
+}
+ 
+// ── WEIGHT ────────────────────────────────────────────────
+function wtDataDates(){
+  var map={};
+  ls('wt_weight',[]).forEach(function(e){ map[e.date]=1; });
+  return map;
+}
+function addWeight(){
+  var val=parseFloat(document.getElementById('wt-input').value);
+  if(isNaN(val)||val<=0)return;
+  var entries=ls('wt_weight',[]);
+  var selDate=cals.wt.selected, idx=-1;
+  for(var i=0;i<entries.length;i++){if(entries[i].date===selDate){idx=i;break;}}
+  if(idx>=0)entries[idx].weight=val;
+  else entries.push({id:String(Date.now()),date:selDate,weight:val});
+  entries.sort(function(a,b){return a.date.localeCompare(b.date);});
+  sv('wt_weight',entries);
+  document.getElementById('wt-input').value='';
+  renderWeight();
+}
+function delWeight(id){sv('wt_weight',ls('wt_weight',[]).filter(function(e){return e.id!==id;}));renderWeight();}
+function drawChart(entries){
+  var data=entries.slice(-30);
+  if(data.length<2){document.getElementById('wt-chart-wrap').style.display='none';return;}
+  document.getElementById('wt-chart-wrap').style.display='block';
+  var canvas=document.getElementById('wt-chart');
+  var dpr=window.devicePixelRatio||1;
+  var W=canvas.parentElement.clientWidth-28,H=160;
+  canvas.width=W*dpr;canvas.height=H*dpr;
+  canvas.style.width=W+'px';canvas.style.height=H+'px';
+  var ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);
+  var vals=data.map(function(e){return e.weight;});
+  var minV=Math.min.apply(null,vals)-1,maxV=Math.max.apply(null,vals)+1;
+  var pad={t:10,r:10,b:30,l:38},W2=W-pad.l-pad.r,H2=H-pad.t-pad.b;
+  function px(i){return pad.l+i*(W2/Math.max(data.length-1,1));}
+  function py(v){return pad.t+H2-(v-minV)/(maxV-minV)*H2;}
+  ctx.strokeStyle='#f0e8e0';ctx.lineWidth=1;
+  for(var g=0;g<4;g++){var y=pad.t+g*(H2/3);ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(pad.l+W2,y);ctx.stroke();}
+  ctx.fillStyle='#ccc';ctx.font='10px -apple-system,sans-serif';ctx.textAlign='right';
+  for(var g=0;g<4;g++){var v=minV+(maxV-minV)*(1-g/3);ctx.fillText(v.toFixed(1),pad.l-4,pad.t+g*(H2/3)+4);}
+  ctx.textAlign='center';
+  var step=Math.ceil(data.length/5);
+  data.forEach(function(e,i){if(i%step===0||i===data.length-1){ctx.fillText(e.date.slice(5),px(i),H-4);}});
+  ctx.strokeStyle='#c9a882';ctx.lineWidth=2;ctx.beginPath();
+  data.forEach(function(e,i){i===0?ctx.moveTo(px(i),py(e.weight)):ctx.lineTo(px(i),py(e.weight));});
+  ctx.stroke();
+  ctx.fillStyle='#c9a882';
+  data.forEach(function(e,i){ctx.beginPath();ctx.arc(px(i),py(e.weight),3,0,2*Math.PI);ctx.fill();});
+}
+function renderWeight(){
+  buildMonthCal('wt', cals.wt, wtDataDates, function(ds){
+    cals.wt.selected=ds; renderWeight();
+  });
+  var entries=ls('wt_weight',[]);
+  var latest=entries[entries.length-1],prev=entries[entries.length-2];
+  var el=document.getElementById('wt-latest');
+  if(latest){
+    var diff=prev?(latest.weight-prev.weight).toFixed(1):null;
+    var dc=diff===null?'#aaa':parseFloat(diff)<0?'#7ab88a':parseFloat(diff)>0?'#e24b4a':'#aaa';
+    el.style.display='block';
+    el.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center">'
+      +'<div><div class="label">⚖️ 最新體重</div>'
+      +'<div style="font-size:32px;font-weight:600;color:#2d2d2d">'+latest.weight
+      +'<span style="font-size:14px;color:#bbb;margin-left:4px">kg</span></div>'
+      +'<div class="hint">'+latest.date+'</div></div>'
+      +(diff!==null?'<div style="text-align:right"><div class="label">與前次</div>'
+        +'<div style="font-size:22px;font-weight:600;color:'+dc+'">'+(parseFloat(diff)>0?'+':'')+diff+' kg</div></div>':'')
+      +'</div>';
+    drawChart(entries);
+  } else {
+    el.style.display='none';
+    document.getElementById('wt-chart-wrap').style.display='none';
+  }
+  var list=document.getElementById('wt-list');
+  if(!entries.length){list.innerHTML='<div class="empty">還沒有體重紀錄 🌿</div>';return;}
+  list.innerHTML='';
+  entries.slice().reverse().forEach(function(e){
+    var row=document.createElement('div'); row.className='wt-list-row';
+    row.innerHTML='<div style="font-size:14px;color:#aaa">'+e.date+'</div>'
+      +'<div style="display:flex;align-items:center;gap:12px">'
+      +'<div style="font-size:15px;font-weight:600;color:#2d2d2d">'+e.weight+' kg</div>'
+      +'<button class="del-btn" onclick="delWeight(\''+e.id+'\')">×</button></div>';
+    list.appendChild(row);
+  });
+}
+ 
+updateTimer();
+renderWorkout();
+</script>
+</body>
+</html>
