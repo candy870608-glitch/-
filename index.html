@@ -12,8 +12,8 @@
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
 html,body{background:#f0ede8}
 body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;color:#2d2d2d;max-width:480px;margin:0 auto;min-height:100vh}
-.nav{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:10px 12px;border-bottom:1px solid #e2ddd8;position:sticky;top:0;background:#f0ede8;z-index:20}
-.nav button{padding:8px 0;border:1px solid #e0d8d0;border-radius:12px;background:transparent;font-size:11px;cursor:pointer;color:#aaa;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:2px;width:100%}
+.nav{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;padding:10px 12px;border-bottom:1px solid #e2ddd8;position:sticky;top:0;background:#f0ede8;z-index:20}
+.nav button{padding:6px 0;border:1px solid #e0d8d0;border-radius:12px;background:transparent;font-size:10px;cursor:pointer;color:#aaa;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:2px;width:100%}
 .nav button span{font-size:18px}
 .nav button.active{border-color:#c9a882;background:#fff8f3;color:#5a3e2b;font-weight:600}
 .tab{display:none;padding-bottom:40px}
@@ -75,6 +75,8 @@ canvas{width:100%;height:160px;display:block}
     <button onclick="showTab('workout')" id="nb-workout"><span>🏋️</span>訓練</button>
     <button onclick="showTab('food')" id="nb-food"><span>🥗</span>飲食</button>
     <button onclick="showTab('weight')" id="nb-weight"><span>⚖️</span>體重</button>
+    <button onclick="showTab('report')" id="nb-report"><span>📊</span>報表</button>
+    <button onclick="showTab('settings')" id="nb-settings"><span>⚙️</span>設定</button>
   </nav>
  
   <!-- TIMER -->
@@ -154,6 +156,49 @@ canvas{width:100%;height:160px;display:block}
       <div id="wt-list"></div>
     </div>
   </div>
+  <!-- REPORT -->
+  <div id="tab-report" class="tab">
+    <div class="content" style="padding-top:16px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <button id="rpt-prev" onclick="reportPrev()" class="cal-nav-btn">‹</button>
+        <div id="rpt-week-label" style="font-size:15px;font-weight:600;color:#2d2d2d"></div>
+        <button id="rpt-next" onclick="reportNext()" class="cal-nav-btn">›</button>
+      </div>
+      <!-- week bar -->
+      <div id="rpt-week-bar" class="card" style="padding:10px 8px"></div>
+      <!-- stats row -->
+      <div id="rpt-stats" class="card"></div>
+      <!-- workout summary -->
+      <div id="rpt-workout" class="card"></div>
+      <!-- food summary -->
+      <div id="rpt-food" class="card"></div>
+      <!-- weight summary -->
+      <div id="rpt-weight-card" class="card"></div>
+    </div>
+  </div>
+ 
+  <!-- SETTINGS -->
+  <div id="tab-settings" class="tab">
+    <div class="content" style="padding-top:20px">
+      <div class="card">
+        <div style="font-size:15px;font-weight:600;color:#2d2d2d;margin-bottom:16px">🎯 飲食目標</div>
+        <div style="margin-bottom:14px">
+          <div class="label" style="margin-bottom:6px">每日熱量目標 (kcal)</div>
+          <input id="set-cal" type="number" inputmode="numeric" placeholder="例如 1400">
+        </div>
+        <div style="margin-bottom:14px">
+          <div class="label" style="margin-bottom:6px">每日蛋白質目標 (g)</div>
+          <input id="set-pro" type="number" inputmode="numeric" placeholder="例如 120">
+        </div>
+        <button class="btn-main" onclick="saveSettings()">儲存設定</button>
+        <div id="set-msg" style="font-size:13px;color:#7ab88a;margin-top:8px;text-align:center;display:none">✓ 已儲存！</div>
+      </div>
+      <div class="card">
+        <div style="font-size:15px;font-weight:600;color:#2d2d2d;margin-bottom:4px">目前設定</div>
+        <div id="set-current" style="font-size:13px;color:#aaa;margin-top:8px"></div>
+      </div>
+    </div>
+  </div>
 </div>
  
 <script>
@@ -173,6 +218,8 @@ function showTab(t){
   if(t==='workout')renderWorkout();
   if(t==='food')renderFood();
   if(t==='weight')renderWeight();
+  if(t==='report')renderReport();
+  if(t==='settings'){var g=getGoals();document.getElementById('set-cal').value=g.cal;document.getElementById('set-pro').value=g.pro;renderSettingsCurrent();}
 }
  
 // ── monthly calendar ──────────────────────────────────────
@@ -386,6 +433,7 @@ function renderWorkout(){
 var MEALS=['早餐','午餐','晚餐','點心'];
 var MICONS=['🌅','☀️','🌇','🍎'];
 var selMeal=0, fdExp={0:true,1:true,2:true,3:true};
+function getGoals(){return{cal:ls("goal_cal",1400),pro:ls("goal_pro",120)};}
 var CAL_GOAL=1400, PRO_GOAL=120;
 function fdDataDates(){
   var map={};
@@ -414,6 +462,7 @@ function renderFood(){
   var entries=ls('food_v4',[]).filter(function(e){return e.date===selDate;});
   var totalCal=entries.reduce(function(s,e){return s+e.cal;},0);
   var totalPro=entries.reduce(function(s,e){return s+e.protein;},0);
+  var goals=getGoals();CAL_GOAL=goals.cal;PRO_GOAL=goals.pro;
   document.getElementById('fd-summary').innerHTML=
     '<div class="grid2">'
     +'<div><div style="display:flex;justify-content:space-between"><span class="label">🔥 卡路里</span><span class="hint">'+Math.round(totalCal)+'/'+CAL_GOAL+'kcal</span></div><div class="bar-bg"><div class="bar-fill" style="background:#c9a060;width:'+Math.min(totalCal/CAL_GOAL,1)*100+'%"></div></div></div>'
@@ -558,6 +607,172 @@ function renderWeight(){
       +'<button class="del-btn" onclick="delWeight(\''+e.id+'\')">×</button></div>';
     list.appendChild(row);
   });
+}
+ 
+function saveSettings(){
+  var cal=parseInt(document.getElementById('set-cal').value);
+  var pro=parseInt(document.getElementById('set-pro').value);
+  if(cal>0)sv('goal_cal',cal);
+  if(pro>0)sv('goal_pro',pro);
+  var msg=document.getElementById('set-msg');
+  msg.style.display='block';
+  renderSettingsCurrent();
+  setTimeout(function(){msg.style.display='none';},2000);
+}
+function renderSettingsCurrent(){
+  var g=getGoals();
+  var el=document.getElementById('set-current');
+  if(el)el.innerHTML='熱量目標：<strong>'+g.cal+' kcal</strong>　蛋白質目標：<strong>'+g.pro+' g</strong>';
+}
+ 
+// ── REPORT ────────────────────────────────────────────────
+var rptOffset = 0; // 0=this week, -1=last week, etc.
+ 
+function getWeekRange(offset) {
+  var now = new Date();
+  var day = now.getDay(); // 0=sun
+  var mon = new Date(now); mon.setDate(now.getDate() - day + 1 + offset*7);
+  mon.setHours(0,0,0,0);
+  var sun = new Date(mon); sun.setDate(mon.getDate()+6);
+  return { mon:mon, sun:sun };
+}
+function dsOf(d){ return d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate(); }
+function datesInWeek(range){
+  var dates=[];
+  for(var d=new Date(range.mon);d<=range.sun;d.setDate(d.getDate()+1)){
+    dates.push(dsOf(new Date(d)));
+  }
+  return dates;
+}
+ 
+function reportPrev(){ rptOffset--; renderReport(); }
+function reportNext(){ if(rptOffset<0){rptOffset++;renderReport();} }
+ 
+function renderReport(){
+  var range = getWeekRange(rptOffset);
+  var dates = datesInWeek(range);
+  var today = todayStr();
+ 
+  // week label
+  var lbl = (range.mon.getMonth()+1)+'/'+range.mon.getDate()+' – '+(range.sun.getMonth()+1)+'/'+range.sun.getDate();
+  document.getElementById('rpt-week-label').textContent = rptOffset===0?'本週　'+lbl:rptOffset===-1?'上週　'+lbl:lbl;
+  document.getElementById('rpt-next').style.color = rptOffset<0?'#c9a882':'#ddd';
+ 
+  var wkEntries = ls('wt_v4',[]);
+  var fdEntries = ls('food_v4',[]);
+  var wtEntries = ls('wt_weight',[]);
+ 
+  var WDAY2 = ['一','二','三','四','五','六','日'];
+ 
+  // ── week bar (7 days) ──
+  var barEl = document.getElementById('rpt-week-bar');
+  barEl.innerHTML = '<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center">'
+    + dates.map(function(ds,i){
+        var hasWk = wkEntries.some(function(e){return e.date===ds;});
+        var hasFd = fdEntries.some(function(e){return e.date===ds;});
+        var isToday = ds===today;
+        var isFuture = ds > today;
+        var dotColor = hasWk?'#c9a882':'#eee';
+        var fdColor = hasFd?'#7aa8c9':'#eee';
+        return '<div style="display:flex;flex-direction:column;align-items:center;gap:3px">'
+          +'<div style="font-size:10px;color:'+(isToday?'#c9a882':'#bbb')+'">'+WDAY2[i]+'</div>'
+          +'<div style="width:28px;height:28px;border-radius:50%;background:'+(isToday?'#c9a882':isFuture?'#f5f0ea':'#fffcf9')+';border:1px solid '+(isToday?'#c9a882':'#e8ddd4')+';display:flex;align-items:center;justify-content:center;font-size:12px;color:'+(isToday?'#fff':'#aaa')+'">'
+          + (new Date(range.mon.getFullYear(),range.mon.getMonth(),range.mon.getDate()+i)).getDate()
+          +'</div>'
+          +'<div style="width:6px;height:6px;border-radius:50%;background:'+dotColor+'"></div>'
+          +'<div style="width:6px;height:6px;border-radius:50%;background:'+fdColor+'"></div>'
+          +'</div>';
+      }).join('')
+    +'</div>'
+    +'<div style="display:flex;gap:12px;margin-top:10px;justify-content:center;font-size:11px;color:#bbb">'
+    +'<span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#c9a882;margin-right:3px"></span>訓練</span>'
+    +'<span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#7aa8c9;margin-right:3px"></span>飲食</span>'
+    +'</div>';
+ 
+  // ── stats ──
+  var trainDays = dates.filter(function(ds){ return wkEntries.some(function(e){return e.date===ds;}); }).length;
+  var fdDays = dates.filter(function(ds){ return fdEntries.some(function(e){return e.date===ds;}); });
+  var weekFdEntries = fdEntries.filter(function(e){ return dates.indexOf(e.date)>=0; });
+  var avgCal = fdDays.length ? Math.round(weekFdEntries.reduce(function(s,e){return s+e.cal;},0)/fdDays.length) : 0;
+  var avgPro = fdDays.length ? Math.round(weekFdEntries.reduce(function(s,e){return s+e.protein;},0)/fdDays.length) : 0;
+  var goals = getGoals();
+ 
+  document.getElementById('rpt-stats').innerHTML =
+    '<div style="font-size:14px;font-weight:600;color:#2d2d2d;margin-bottom:12px">📈 本週數據</div>'
+    +'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center">'
+    +'<div style="background:#f5f0ea;border-radius:12px;padding:10px 4px"><div style="font-size:22px;font-weight:700;color:#c9a882">'+trainDays+'</div><div style="font-size:11px;color:#aaa;margin-top:2px">訓練天數</div></div>'
+    +'<div style="background:#f5f0ea;border-radius:12px;padding:10px 4px"><div style="font-size:22px;font-weight:700;color:'+(avgCal>0?'#c9a060':'#ccc')+'">'+( avgCal||'–')+'</div><div style="font-size:11px;color:#aaa;margin-top:2px">平均熱量</div></div>'
+    +'<div style="background:#f5f0ea;border-radius:12px;padding:10px 4px"><div style="font-size:22px;font-weight:700;color:'+(avgPro>0?'#7aa8c9':'#ccc')+'">'+( avgPro||'–')+'</div><div style="font-size:11px;color:#aaa;margin-top:2px">平均蛋白質</div></div>'
+    +'</div>'
+    // progress bars
+    +(avgCal>0?'<div style="margin-top:12px"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:12px;color:#aaa">熱量達成率</span><span style="font-size:12px;color:#aaa">'+avgCal+'/'+goals.cal+'kcal</span></div><div class="bar-bg"><div class="bar-fill" style="background:#c9a060;width:'+Math.min(avgCal/goals.cal,1)*100+'%"></div></div></div>':'')
+    +(avgPro>0?'<div style="margin-top:8px"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:12px;color:#aaa">蛋白質達成率</span><span style="font-size:12px;color:#aaa">'+avgPro+'/'+goals.pro+'g</span></div><div class="bar-bg"><div class="bar-fill" style="background:#7aa8c9;width:'+Math.min(avgPro/goals.pro,1)*100+'%"></div></div></div>':'');
+ 
+  // ── workout summary ──
+  var weekWk = wkEntries.filter(function(e){ return dates.indexOf(e.date)>=0; });
+  var wkGroups = {};
+  weekWk.forEach(function(e){ if(!wkGroups[e.name])wkGroups[e.name]=[];wkGroups[e.name].push(e); });
+  var wkKeys = Object.keys(wkGroups);
+  var rptWk = document.getElementById('rpt-workout');
+  if(!wkKeys.length){
+    rptWk.innerHTML='<div style="font-size:14px;font-weight:600;color:#2d2d2d;margin-bottom:8px">🏋️ 訓練摘要</div><div class="empty" style="padding:16px">這週還沒有訓練紀錄</div>';
+  } else {
+    var totalVol = weekWk.reduce(function(s,e){return s+e.weight*e.reps;},0);
+    var rows = wkKeys.map(function(name){
+      var list=wkGroups[name];
+      var vol=list.reduce(function(s,e){return s+e.weight*e.reps;},0);
+      var maxW=Math.max.apply(null,list.map(function(e){return e.weight;}));
+      return '<div class="frow"><div><div style="font-size:13px;font-weight:500;color:#2d2d2d">'+name+'</div>'
+        +'<div class="hint">'+list.length+' 組・最大 '+maxW+'kg</div></div>'
+        +'<div style="font-size:13px;font-weight:600;color:#c9a882">'+Math.round(vol)+' kg</div></div>';
+    }).join('');
+    rptWk.innerHTML='<div style="font-size:14px;font-weight:600;color:#2d2d2d;margin-bottom:8px">🏋️ 訓練摘要</div>'
+      +'<div style="font-size:12px;color:#aaa;margin-bottom:10px">總訓練量 '+Math.round(totalVol)+' kg</div>'
+      +'<div style="border-radius:10px;overflow:hidden;border:1px solid #f0e8e0">'+rows+'</div>';
+  }
+ 
+  // ── food summary ──
+  var rptFd = document.getElementById('rpt-food');
+  if(!weekFdEntries.length){
+    rptFd.innerHTML='<div style="font-size:14px;font-weight:600;color:#2d2d2d;margin-bottom:8px">🥗 飲食摘要</div><div class="empty" style="padding:16px">這週還沒有飲食紀錄</div>';
+  } else {
+    var calByDay = {};
+    weekFdEntries.forEach(function(e){ calByDay[e.date]=(calByDay[e.date]||0)+e.cal; });
+    var calVals = Object.values(calByDay);
+    var maxCal = Math.max.apply(null,calVals);
+    var dayRows = dates.map(function(ds){
+      var cal = calByDay[ds]||0;
+      if(!cal && ds>today) return '';
+      var pct = maxCal>0?Math.round(cal/maxCal*100):0;
+      var d=new Date(ds.replace(/\//g,'-'));
+      return '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">'
+        +'<div style="font-size:11px;color:#bbb;width:20px;text-align:right">'+(d.getMonth()+1)+'/'+d.getDate()+'</div>'
+        +'<div style="flex:1;background:#f5f0ea;border-radius:4px;height:18px;position:relative">'
+        +'<div style="background:'+(cal>=goals.cal?'#c9a060':'#e8c8a0')+';border-radius:4px;height:18px;width:'+pct+'%;transition:width .4s"></div>'
+        +'<div style="position:absolute;right:6px;top:1px;font-size:11px;color:#888;line-height:16px">'+cal+'</div>'
+        +'</div></div>';
+    }).join('');
+    rptFd.innerHTML='<div style="font-size:14px;font-weight:600;color:#2d2d2d;margin-bottom:12px">🥗 飲食摘要</div>'
+      + dayRows
+      +'<div style="font-size:11px;color:#bbb;margin-top:6px;text-align:right">目標 '+goals.cal+' kcal</div>';
+  }
+ 
+  // ── weight summary ──
+  var rptWt = document.getElementById('rpt-weight-card');
+  var weekWt = wtEntries.filter(function(e){ return dates.indexOf(e.date)>=0; });
+  if(!weekWt.length){
+    rptWt.innerHTML='<div style="font-size:14px;font-weight:600;color:#2d2d2d;margin-bottom:8px">⚖️ 體重變化</div><div class="empty" style="padding:16px">這週還沒有體重紀錄</div>';
+  } else {
+    var first=weekWt[0].weight, last=weekWt[weekWt.length-1].weight;
+    var diff=(last-first).toFixed(1);
+    var dc=parseFloat(diff)<0?'#7ab88a':parseFloat(diff)>0?'#e24b4a':'#aaa';
+    rptWt.innerHTML='<div style="font-size:14px;font-weight:600;color:#2d2d2d;margin-bottom:12px">⚖️ 體重變化</div>'
+      +'<div style="display:flex;justify-content:space-around;text-align:center">'
+      +'<div><div style="font-size:12px;color:#aaa;margin-bottom:4px">週初</div><div style="font-size:20px;font-weight:600">'+first+'<span style="font-size:12px;color:#bbb">kg</span></div></div>'
+      +'<div><div style="font-size:12px;color:#aaa;margin-bottom:4px">本週變化</div><div style="font-size:24px;font-weight:700;color:'+dc+'">'+(parseFloat(diff)>0?'+':'')+diff+'<span style="font-size:12px;color:#bbb">kg</span></div></div>'
+      +'<div><div style="font-size:12px;color:#aaa;margin-bottom:4px">最新</div><div style="font-size:20px;font-weight:600">'+last+'<span style="font-size:12px;color:#bbb">kg</span></div></div>'
+      +'</div>';
+  }
 }
  
 updateTimer();
